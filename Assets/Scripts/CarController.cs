@@ -9,6 +9,12 @@ public class CarController : MonoBehaviour
     [SerializeField] private GameObject _lights;
     [SerializeField] private GameObject _lightsBackMove;
 
+    //смещениие центра массы
+    [SerializeField] private Vector3 _emptyCenterOfMass = new Vector3(0, -0.5f, 0);
+    [SerializeField] private Vector3 _loadedCenterOfMassOffset = new Vector3(0, -0.8f, -0.6f); // X, Y, Z смещение при полной загрузке
+
+    private Vector3 originalCenterOfMass;
+
 
     private Rigidbody _rb;
     [SerializeField] private int _motorForce;
@@ -16,11 +22,13 @@ public class CarController : MonoBehaviour
     [SerializeField] private float _engineBrakeForce;
     [SerializeField] private float _maxSpeedForvard;
     [SerializeField] private float _maxSpeedRevers;
-    private bool isLoaded = false;
+
+    private float loadFactor = 0f;
 
     [SerializeField] private float _brakeInput;
     private float _verticalInput;
     private float _horizontalInput;
+    private float massCargo = 0f;
 
     [SerializeField] public float _speed;
 
@@ -31,15 +39,19 @@ public class CarController : MonoBehaviour
     private WheelFrictionCurve[] initialForwardFrictions;
     private WheelFrictionCurve[] initialSidewaysFrictions;
 
+    private TruckCargoSystem truckCargoSystem;
+
     private void Start()
     {
         _rb = GetComponent<Rigidbody>();
         _rb.centerOfMass = _centreOfMass != null ? _centreOfMass.localPosition : new Vector3(0, -0.5f, 0);
-        _rb.mass = 1500f;
+        originalCenterOfMass = _rb.centerOfMass;
+        _rb.mass = 2800f;
         _rb.linearDamping = 0.5f;
         _rb.angularDamping = 0.5f;
         _rb.interpolation = RigidbodyInterpolation.Interpolate;
         _rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+        truckCargoSystem = _rb.GetComponent<TruckCargoSystem>();
 
         foreach (Wheel wheel in _wheels)
         {
@@ -88,7 +100,9 @@ public class CarController : MonoBehaviour
         Move();
         Steer();
         Brake();
-        UpdateWheelSettings(isLoaded);
+        CheckLoad();
+        UpdateWheelSettings();
+        UpdateCenterOfMass();
     }
 
     private void FixedUpdate()
@@ -101,6 +115,52 @@ public class CarController : MonoBehaviour
             }
         }
 
+    }
+    private void UpdateCenterOfMass()
+    {
+        if (loadFactor <= 0.01f)
+        {
+            _rb.centerOfMass = originalCenterOfMass;
+            return;
+        }
+
+        // Плавная интерполяция центра масс
+        Vector3 targetCoM = originalCenterOfMass + _loadedCenterOfMassOffset * loadFactor;
+
+        // Дополнительно немного опускаем центр масс при сильной загрузке (очень важно!)
+        targetCoM.y = Mathf.Lerp(originalCenterOfMass.y, originalCenterOfMass.y - 0.7f, loadFactor);
+
+        _rb.centerOfMass = targetCoM;
+        Debug.Log("centerOfMass" +  _rb.centerOfMass);
+    }
+
+    private void CheckLoad()
+    {
+        if (truckCargoSystem.currentCargo != null)
+        {
+            // Берём массу напрямую из Rigidbody груза
+            Rigidbody cargoRb = truckCargoSystem.currentCargo.GetComponent<Rigidbody>();
+            if (cargoRb != null)
+            {
+                massCargo = cargoRb.mass;
+            }
+            else
+            {
+                // Fallback — если есть публичное поле massCargo на скрипте CargoPickup
+                CargoPickup cargoScript = truckCargoSystem.currentCargo.GetComponent<CargoPickup>();
+                if (cargoScript != null)
+                    massCargo = cargoScript.massCargo;
+            }
+        }
+        else
+        {
+            massCargo = 0f;
+        }
+
+        float emptyMass = 2800f;           // пустая масса грузовика
+        float maxCargoMass = 300f;        // максимальная масса груза (подстрой)
+
+        loadFactor = Mathf.Clamp01((massCargo) / maxCargoMass); // теперь правильно
     }
 
 
@@ -189,14 +249,11 @@ public class CarController : MonoBehaviour
 
     private void Steer()
     {
-        AnimationCurve _sterlingCurve;
-        if (isLoaded)
-        {
-            _sterlingCurve = _loadedSterlingCurve;
-        }
-        else _sterlingCurve = _emptySterlingCurve;
+        AnimationCurve _sterlingCurve = (loadFactor > 0.3f) ? _loadedSterlingCurve : _emptySterlingCurve;
+
         float steeringAngle = _horizontalInput * _sterlingCurve.Evaluate(_speed);
         steeringAngle = Mathf.Clamp(steeringAngle, -42f, 42f);
+
         foreach (Wheel wheel in _wheels)
         {
             if (wheel.IsForwardWheels && wheel.WheelCollider != null)
@@ -204,33 +261,33 @@ public class CarController : MonoBehaviour
         }
     }
 
-    void UpdateWheelSettings(bool isLoaded)
+    void UpdateWheelSettings()
     {
-        float massFactor = isLoaded ? 1.65f : 1f; // коэффициент загрузки
+        float t = loadFactor;
 
         foreach (Wheel wheel in _wheels)
         {
             var c = wheel.WheelCollider;
 
-            // Подвеска
+            // === Подвеска ===
             JointSpring spring = c.suspensionSpring;
-            spring.spring = isLoaded ? 68000f : 42000f;
-            spring.damper = isLoaded ? 4200f : 2600f;
+            spring.spring = Mathf.Lerp(42000f, 68000f, t);
+            spring.damper = Mathf.Lerp(2600f, 4200f, t);
             spring.targetPosition = 0.48f;
             c.suspensionSpring = spring;
 
-            c.suspensionDistance = isLoaded ? 0.55f : 0.68f;
-            c.forceAppPointDistance = isLoaded ? -0.08f : -0.03f;
+            c.suspensionDistance = Mathf.Lerp(0.68f, 0.55f, t);
+            c.forceAppPointDistance = Mathf.Lerp(-0.03f, -0.08f, t);
 
-            // Трение
+            // === Трение ===
             WheelFrictionCurve fwd = c.forwardFriction;
-            fwd.extremumValue = isLoaded ? 1.25f : 1.1f;
-            fwd.asymptoteValue = isLoaded ? 0.8f : 0.75f;
+            fwd.extremumValue = Mathf.Lerp(1.1f, 1.25f, t);
+            fwd.asymptoteValue = Mathf.Lerp(0.75f, 0.8f, t);
             c.forwardFriction = fwd;
 
             WheelFrictionCurve side = c.sidewaysFriction;
-            side.extremumValue = isLoaded ? 1.05f : 1.15f;     // груженый = хуже боковое сцепление
-            side.asymptoteValue = isLoaded ? 0.75f : 0.85f;
+            side.extremumValue = Mathf.Lerp(1.15f, 1.05f, t); // хуже боковое сцепление при загрузке
+            side.asymptoteValue = Mathf.Lerp(0.85f, 0.75f, t);
             c.sidewaysFriction = side;
         }
     }
