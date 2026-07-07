@@ -25,9 +25,6 @@ public class CarController : MonoBehaviour
 
     [SerializeField] private AnimationCurve _sterlingCurve;
 
-    private float smallAngleTimer = 0f;
-    private const float REQUIRED_SMALL_ANGLE_TIME = 2f;
-
     private JointSpring[] initialSprings;
     private WheelFrictionCurve[] initialForwardFrictions;
     private WheelFrictionCurve[] initialSidewaysFrictions;
@@ -46,43 +43,51 @@ public class CarController : MonoBehaviour
         {
             var c = wheel.WheelCollider;
 
-            // Подвеска
-            var spring = c.suspensionSpring;
-            spring.spring = 35000f;
-            spring.damper = 1500f;
+            // === Подвеска (Suspension) ===
+            JointSpring spring = c.suspensionSpring;
+            spring.spring = 45000f;        // Жёстче чем у легковушки
+            spring.damper = 2800f;         // Хорошее демпфирование
             spring.targetPosition = 0.5f;
             c.suspensionSpring = spring;
 
-            // Радиус и масса
-            // c.radius = 0.5f;
-            // c.mass = 40f;
+            c.suspensionDistance = 0.65f;  // Ход подвески
+            c.forceAppPointDistance = -0.05f; // Точка приложения силы (чуть ниже)
 
-            // Настройка трения (рекомендую эти значения как стартовые)
+            // === Радиус и масса ===
+            // c.radius = 0.45f;           // ~35-37 дюймовые колёса
+            // c.mass = 45f;
+
+            // === Трение (Friction) ===
+            // Forward Friction (разгон и торможение)
             WheelFrictionCurve fwd = c.forwardFriction;
-            fwd.extremumSlip = 0.4f;
-            fwd.extremumValue = 1f;
-            fwd.asymptoteSlip = 0.8f;
-            fwd.asymptoteValue = 0.5f;
+            fwd.extremumSlip = 0.35f;
+            fwd.extremumValue = 1.15f;
+            fwd.asymptoteSlip = 0.75f;
+            fwd.asymptoteValue = 0.75f;
             c.forwardFriction = fwd;
 
+            // Sideways Friction (боковое сцепление)
             WheelFrictionCurve side = c.sidewaysFriction;
-            side.extremumSlip = 0.2f;
-            side.extremumValue = 1f;
-            side.asymptoteSlip = 0.5f;
-            side.asymptoteValue = 0.75f;
+            side.extremumSlip = 0.25f;
+            side.extremumValue = 1.1f;
+            side.asymptoteSlip = 0.55f;
+            side.asymptoteValue = 0.85f;
             c.sidewaysFriction = side;
         }
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
+        Debug.Log($"Wheels count: {_wheels.Length}");
     }
 
     private void Update()
     {
         CheckInput();
         Move();
+        Steer();
         Brake();
-        Steerling();
+        
         
     }
 
@@ -175,22 +180,15 @@ public class CarController : MonoBehaviour
 
     }
 
-    private void Steerling()
+    private void Steer()
     {
         float steeringAngle = _horizontalInput * _sterlingCurve.Evaluate(_speed);
-        float slipAngel = Vector3.Angle(transform.forward, _rb.linearVelocity - transform.forward);
-
-        if (slipAngel < 120 && slipAngel > 10)
-            steeringAngle += Vector3.SignedAngle(transform.forward, _rb.linearVelocity, Vector3.up);
-
-        steeringAngle = Mathf.Clamp(steeringAngle, -48, 48);
-
+        steeringAngle = Mathf.Clamp(steeringAngle, -48f, 48f);
+        Debug.Log($"Horizontal: {_horizontalInput:F2}, Speed: {_speed:F1}, SteeringAngle: {steeringAngle:F1}");
         foreach (Wheel wheel in _wheels)
         {
-            if (wheel.IsForwardWheels)
-            {
+            if (wheel.IsForwardWheels && wheel.WheelCollider != null)
                 wheel.WheelCollider.steerAngle = steeringAngle;
-            }
         }
     }
 
