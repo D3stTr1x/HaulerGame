@@ -9,7 +9,6 @@ public class DeliveryZone : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         Package box = other.GetComponent<Package>();
-        //Destroy(other); //later
         MarkDelivered(box);
     }
     void MarkDelivered(Package box) 
@@ -18,8 +17,7 @@ public class DeliveryZone : MonoBehaviour
         {
             SimpleScore.Instance.UpdateScore(pts);
         }
-        
-        Destroy(box);
+       
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()

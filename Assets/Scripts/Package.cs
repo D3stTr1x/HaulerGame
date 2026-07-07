@@ -75,6 +75,7 @@ public class Package : MonoBehaviour
         health -= dmg;
         if (health <= 0)
         {
+            UpdateScore(penalty);
             Die();
         }
     }
@@ -122,8 +123,6 @@ public class Package : MonoBehaviour
     }
     void Die()
     {
-        UpdateScore(penalty);
-
         if (hpBar != null)
             Destroy(hpBar.gameObject);
         Destroy(gameObject);
@@ -137,7 +136,7 @@ public class Package : MonoBehaviour
     public void MarkDelivered()
     {
         isDelivered = true;
-
+        Die();
         Debug.Log("package delivered");
     }
     // Update is called once per frame 
