@@ -10,10 +10,10 @@ public class CarController : MonoBehaviour
     [SerializeField] private GameObject _lightsBackMove;
 
     //смещениие центра массы
-    [SerializeField] private Vector3 _emptyCenterOfMass = new Vector3(0, -0.5f, 0);
-    [SerializeField] private Vector3 _loadedCenterOfMassOffset = new Vector3(0, -0.8f, -0.6f); // X, Y, Z смещение при полной загрузке
+    [SerializeField] private Vector3 _emptyCenterOfMass = new Vector3(0, -0.6f, 0f);
+    [SerializeField] private Vector3 _loadedCoMOffset = new Vector3(0.0f, 0.4f, -0.7f); // X, Y, Z смещение при полной загрузке
 
-    private Vector3 originalCenterOfMass;
+    private Vector3 baseCenterOfMass;
 
 
     private Rigidbody _rb;
@@ -44,8 +44,8 @@ public class CarController : MonoBehaviour
     private void Start()
     {
         _rb = GetComponent<Rigidbody>();
-        _rb.centerOfMass = _centreOfMass != null ? _centreOfMass.localPosition : new Vector3(0, -0.5f, 0);
-        originalCenterOfMass = _rb.centerOfMass;
+        _rb.centerOfMass = _emptyCenterOfMass;
+        baseCenterOfMass = _rb.centerOfMass;
         _rb.mass = 2800f;
         _rb.linearDamping = 0.5f;
         _rb.angularDamping = 0.5f;
@@ -101,8 +101,9 @@ public class CarController : MonoBehaviour
         Steer();
         Brake();
         CheckLoad();
-        UpdateWheelSettings();
         UpdateCenterOfMass();
+        UpdateWheelSettings();
+        
     }
 
     private void FixedUpdate()
@@ -118,19 +119,19 @@ public class CarController : MonoBehaviour
     }
     private void UpdateCenterOfMass()
     {
-        if (loadFactor <= 0.01f)
+        if (loadFactor < 0.05f)
         {
-            _rb.centerOfMass = originalCenterOfMass;
+            _rb.centerOfMass = baseCenterOfMass;
             return;
         }
 
-        // Плавная интерполяция центра масс
-        Vector3 targetCoM = originalCenterOfMass + _loadedCenterOfMassOffset * loadFactor;
+        // Реалистичное смещение + небольшая компенсация
+        Vector3 offset = _loadedCoMOffset * loadFactor;
 
-        // Дополнительно немного опускаем центр масс при сильной загрузке (очень важно!)
-        targetCoM.y = Mathf.Lerp(originalCenterOfMass.y, originalCenterOfMass.y - 0.7f, loadFactor);
+        // Компенсация: немного "прижимаем" центр масс искусственно для лучшей устойчивости
+        //offset.y = Mathf.Lerp(0f, _loadedCoMOffset.y * 0.75f, loadFactor); // уменьшаем подъём
 
-        _rb.centerOfMass = targetCoM;
+        _rb.centerOfMass = baseCenterOfMass + offset;
         Debug.Log("centerOfMass" +  _rb.centerOfMass);
     }
 
@@ -158,7 +159,7 @@ public class CarController : MonoBehaviour
         }
 
         float emptyMass = 2800f;           // пустая масса грузовика
-        float maxCargoMass = 300f;        // максимальная масса груза (подстрой)
+        float maxCargoMass = 1000f;        // максимальная масса груза (подстрой)
 
         loadFactor = Mathf.Clamp01((massCargo) / maxCargoMass); // теперь правильно
     }
