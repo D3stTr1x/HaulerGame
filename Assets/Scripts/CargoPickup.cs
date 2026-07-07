@@ -6,6 +6,12 @@ public class CargoPickup : MonoBehaviour
     [SerializeField] private float pickupDistance = 6f;
     [SerializeField] private string pickupKey = "e";
     [SerializeField] private Transform cargoHoldPoint;
+    [SerializeField] private float fallDetectionHeight = 0.1f;
+    [SerializeField] private float fallCheckInterval = 0.5f;
+    private TruckCargoSystem truckSystem;
+
+    [Header("Ограничение груза")]
+    [SerializeField] private bool allowOnlyOneCargo = true;
 
     [Header("Визуал")]
     [SerializeField] private float pulseSpeed = 2f;
@@ -14,6 +20,10 @@ public class CargoPickup : MonoBehaviour
     private Renderer[] renderers;
     private Rigidbody rb;
     private bool isPlayerNearby = false;
+    private bool isHold = false;
+    private float fallCheckTimer = 0f;
+    private static Transform currentCargoInTruck = null;
+    public float massCargo = 0f;
 
     private void Awake()
     {
@@ -25,12 +35,22 @@ public class CargoPickup : MonoBehaviour
     {
         if (isPlayerNearby && Input.GetKeyDown(pickupKey))
         {
-            Debug.Log("Кнопка нажата");
-            PickupCargo();
+            TryPickup();
         }
 
         if (isPlayerNearby)
             PulseEffect();
+
+        // Проверка на выпадение груза
+        if (isHold)
+        {
+            fallCheckTimer += Time.deltaTime;
+            if (fallCheckTimer >= fallCheckInterval)
+            {
+                CheckIfFallen();
+                fallCheckTimer = 0f;
+            }
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -39,6 +59,8 @@ public class CargoPickup : MonoBehaviour
         {
             isPlayerNearby = true;
             ShowPickupPrompt(true);
+            if (truckSystem == null)
+                truckSystem = other.GetComponentInParent<TruckCargoSystem>();
         }
     }
 
@@ -54,10 +76,24 @@ public class CargoPickup : MonoBehaviour
 
     private void PickupCargo()
     {
+        if (isHold) return;
+
         ShowPickupPrompt(false);
         ResetHighlight();
 
         StartCoroutine(MoveToCargoHold());
+    }
+    private void TryPickup()
+    {
+        if (truckSystem == null) return;
+
+        if (!truckSystem.CanPickupCargo())
+        {
+            Debug.Log("Кузов уже занят!");
+            return;
+        }
+        PickupCargo();
+        truckSystem.LoadCargo(transform);
     }
 
     private System.Collections.IEnumerator MoveToCargoHold()
@@ -79,17 +115,66 @@ public class CargoPickup : MonoBehaviour
 
         // Мгновенно ставим в точку
         transform.SetParent(null);
+        if (truckSystem != null)
+        {
+            truckSystem.currentCargo = transform;  // важно!
+            truckSystem.massCargo = rb.mass; // если TruckCargoSystem имеет это поле
+        }
         transform.position = cargoHoldPoint.position + Vector3.up * 0.5f;
         transform.rotation = cargoHoldPoint.rotation;
 
         yield return new WaitForSeconds(0.3f); // небольшая пауза
-
         // Финально фиксируем
         transform.SetParent(cargoHoldPoint);
         transform.localPosition = Vector3.zero;
         transform.localRotation = Quaternion.identity;
         rb.isKinematic = false;
-        Debug.Log("Груз ПРИНУДИТЕЛЬНО поставлен в кузов");
+        isHold = true;
+        currentCargoInTruck = transform;
+        Debug.Log("Груз поставлен в кузов");
+    }
+
+    private void CheckIfFallen()
+    {
+        if (cargoHoldPoint == null || !isHold) return;
+
+        // Получаем мировые координаты
+        Vector3 cargoPos = transform.position;
+        Vector3 holdPos = cargoHoldPoint.position;
+
+        // Размер зоны кузова (подбери под свой кузов)
+        float maxDistanceX = 3.3f;   // длина кузова / 2
+        float maxDistanceZ = 1.3f;   // ширина кузова / 2
+        float maxDropY = 0.5f;       // максимальное падение по высоте
+
+        // Вычисляем расстояние по горизонтали (X и Z)
+        float distX = Mathf.Abs(cargoPos.x - holdPos.x);
+        float distZ = Mathf.Abs(cargoPos.z - holdPos.z);
+
+        // Проверка выпадения
+        if (distX > maxDistanceX || distZ > maxDistanceZ ||
+            cargoPos.y < holdPos.y - maxDropY)
+        {
+            OnCargoFallen();
+            truckSystem.UnloadCurrentCargo();
+        }
+    }
+    private void OnCargoFallen()
+    {
+        Debug.LogWarning("Груз вывалился из кузова!");
+
+        isHold = false;
+        currentCargoInTruck = null;
+        // Включаем физику обратно
+        if (rb != null)
+        {
+            rb.detectCollisions = true;
+        }
+
+        // Отсоединяем от кузова
+        transform.SetParent(null);
+
+        // Можно добавить эффект/звук/штраф
     }
 
     private void PulseEffect()
