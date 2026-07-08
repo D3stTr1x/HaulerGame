@@ -1,38 +1,39 @@
+
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class CargoPickup : MonoBehaviour
 {
     [Header("Настройки")]
     [SerializeField] private float pickupDistance = 6f;
     [SerializeField] private string pickupKey = "e";
-    [SerializeField] private Transform cargoHoldPoint;
     [SerializeField] private float fallDetectionHeight = 0.1f;
     [SerializeField] private float fallCheckInterval = 0.5f;
-    private TruckCargoSystem truckSystem;
+    [SerializeField] private float pickupDuration = 1.2f; // Время плавного подъема
     [SerializeField] private TMP_Text HelpText;
-
-    [Header("Ограничение груза")]
-    [SerializeField] private bool allowOnlyOneCargo = true;
 
     [Header("Визуал")]
     [SerializeField] private float pulseSpeed = 2f;
     [SerializeField] private float pulseIntensity = 0.4f;
 
+    public float massCargo = 10f; // Установите базовый вес в инспекторе
+
+    private TruckCargoSystem truckSystem;
     private Renderer[] renderers;
     private Rigidbody rb;
+
     private bool isPlayerNearby = false;
     private bool isHold = false;
     private float fallCheckTimer = 0f;
-    private static Transform currentCargoInTruck = null;
-    public float massCargo = 0f;
+
+    // Убрали static, так как грузов теперь может быть много
+    private Transform currentCargoInTruck = null;
 
     private void Awake()
     {
         renderers = GetComponentsInChildren<Renderer>();
-        rb = GetComponentInParent<Rigidbody>(); // находим Rigidbody на родителе
+        rb = GetComponentInParent<Rigidbody>();
     }
 
     private void Update()
@@ -42,10 +43,9 @@ public class CargoPickup : MonoBehaviour
             TryPickup();
         }
 
-        if (isPlayerNearby)
+        if (isPlayerNearby && !isHold)
             PulseEffect();
 
-        // Проверка на выпадение груза
         if (isHold)
         {
             fallCheckTimer += Time.deltaTime;
@@ -59,14 +59,13 @@ public class CargoPickup : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player") && !isHold)
         {
             isPlayerNearby = true;
             ShowPickupPrompt(true);
             if (truckSystem == null)
                 truckSystem = other.GetComponentInParent<TruckCargoSystem>();
         }
-
     }
 
     private void OnTriggerExit(Collider other)
@@ -76,113 +75,124 @@ public class CargoPickup : MonoBehaviour
             isPlayerNearby = false;
             ShowPickupPrompt(false);
             ResetHighlight();
-            HelpText.gameObject.SetActive(false);
+            if (HelpText != null) HelpText.gameObject.SetActive(false);
         }
     }
 
-    private void PickupCargo()
-    {
-        if (isHold) return;
-
-        ShowPickupPrompt(false);
-        ResetHighlight();
-
-        StartCoroutine(MoveToCargoHold());
-    }
     private void TryPickup()
     {
         if (truckSystem == null) return;
 
         if (!truckSystem.CanPickupCargo())
         {
-            Debug.Log("Кузов уже занят!");
+            Debug.Log("Кузов уже заполнен!");
             return;
         }
-        PickupCargo();
+
+        if (isHold) return;
+
+        ShowPickupPrompt(false);
+        ResetHighlight();
+
+        // Сначала регистрируем груз, чтобы занять место
         truckSystem.LoadCargo(transform);
+        StartCoroutine(MoveToCargoHold());
     }
 
     private System.Collections.IEnumerator MoveToCargoHold()
     {
-        if (cargoHoldPoint == null)
-        {
-            Debug.LogError("CargoHoldPoint не назначен!");
-            yield break;
-        }
+        Transform holdPoint = truckSystem.GetCargoHoldPoint();
+        if (holdPoint == null) yield break;
 
         if (rb != null)
         {
             rb.linearVelocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
-            rb.isKinematic = true;
+            rb.isKinematic = true; // Отключаем гравитацию на время полета
         }
 
-        // Мгновенно ставим в точку
         transform.SetParent(null);
-        if (truckSystem != null)
-        {
-            truckSystem.currentCargo = transform;  // важно!
-            truckSystem.massCargo = rb.mass; // если TruckCargoSystem имеет это поле
-        }
-        transform.position = cargoHoldPoint.position + Vector3.up * 0.5f;
-        transform.rotation = cargoHoldPoint.rotation;
 
-        yield return new WaitForSeconds(0.3f);
-        // Финально фиксируем
-        transform.SetParent(cargoHoldPoint);
-        rb.isKinematic = false;
+
+        // Запрашиваем идеальное свободное место с учетом размера именно этой коробки
+        Vector3 localGridOffset = truckSystem.GetDynamicCargoPosition(transform);
+        Vector3 targetPos = holdPoint.TransformPoint(localGridOffset);
+        Quaternion targetRot = holdPoint.rotation;
+
+
+        Vector3 startPos = transform.position;
+        Quaternion startRot = transform.rotation;
+
+        float elapsed = 0f;
+
+        // Плавное перемещение
+        while (elapsed < pickupDuration)
+        {
+            elapsed += Time.deltaTime;
+            float t = elapsed / pickupDuration;
+
+            yield return null; // Ждем следующий кадр
+        }
+
+        // Жестко фиксируем в конце пути
+        transform.position = targetPos;
+        transform.rotation = targetRot;
+        transform.SetParent(holdPoint);
+
+        // Включаем физику обратно, чтобы груз "лег" в кузов и реагировал на тряску
+        if (rb != null) rb.isKinematic = false;
+
         isHold = true;
-        yield return new WaitForSeconds(0.3f);
         currentCargoInTruck = transform;
-        HelpText.gameObject.SetActive(false);
+        if (HelpText != null) HelpText.gameObject.SetActive(false);
     }
 
     private void CheckIfFallen()
     {
-        if (cargoHoldPoint == null || !isHold) return;
+        Transform holdPoint = truckSystem.GetCargoHoldPoint();
+        if (holdPoint == null || !isHold) return;
 
-        // Получаем мировые координаты
         Vector3 cargoPos = transform.position;
-        Vector3 holdPos = cargoHoldPoint.position;
+        Vector3 holdPos = holdPoint.position;
 
-        // Размер зоны кузова (подбери под свой кузов)
-        float maxDistanceX = 3.5f;   // длина кузова / 2
-        float maxDistanceZ = 1.3f;   // ширина кузова / 2
-        float maxDropY = 0.5f;       // максимальное падение по высоте
+        float maxDistanceX = 3.5f;
+        float maxDistanceZ = 1.3f;
+        float maxDropY = 0.5f;
 
-        // Вычисляем расстояние по горизонтали (X и Z)
         float distX = Mathf.Abs(cargoPos.x - holdPos.x);
         float distZ = Mathf.Abs(cargoPos.z - holdPos.z);
 
-        // Проверка выпадения
-        if (distX > maxDistanceX || distZ > maxDistanceZ ||
-            cargoPos.y < holdPos.y - maxDropY)
+        if (distX > maxDistanceX || distZ > maxDistanceZ || cargoPos.y < holdPos.y - maxDropY)
         {
             OnCargoFallen();
-            truckSystem.UnloadCurrentCargo();
         }
     }
+
     private void OnCargoFallen()
     {
         isHold = false;
         currentCargoInTruck = null;
+
         if (rb != null)
         {
             rb.detectCollisions = true;
         }
 
-        // Отсоединяем от кузова
         transform.SetParent(null);
+        truckSystem.UnloadCargo(transform); // Выгружаем конкретный груз из системы
 
-        HelpText.gameObject.SetActive(true);
-        HelpText.text = "The cargo fell out of the truck bed!";
-        StartCoroutine(HideHelpTextAfterDelay(10f));
+        if (HelpText != null)
+        {
+            HelpText.gameObject.SetActive(true);
+            HelpText.text = "Груз выпал из кузова!";
+            StartCoroutine(HideHelpTextAfterDelay(3f));
+        }
     }
 
     private System.Collections.IEnumerator HideHelpTextAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
-        HelpText.gameObject.SetActive(false);
+        if (HelpText != null) HelpText.gameObject.SetActive(false);
     }
 
     private void PulseEffect()
@@ -206,9 +216,16 @@ public class CargoPickup : MonoBehaviour
 
     private void ShowPickupPrompt(bool show)
     {
+        if (HelpText == null) return;
+
         if (show)
-            Debug.Log("<color=yellow>Нажмите [E] чтобы подобрать груз</color>");
-        HelpText.text = "Press E to take a cargo";
-        HelpText.gameObject.SetActive(true);
+        {
+            HelpText.text = $"Нажмите [{pickupKey.ToUpper()}] чтобы погрузить";
+            HelpText.gameObject.SetActive(true);
+        }
+        else
+        {
+            HelpText.gameObject.SetActive(false);
+        }
     }
 }

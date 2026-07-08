@@ -114,28 +114,60 @@ public class CarController : MonoBehaviour
         ApplyBrakes();
     }
 
+
     private void CalculateDynamicCenterOfMass()
     {
-        if (truckCargoSystem == null || !truckCargoSystem.HasCargo())
+        // Проверяем, есть ли вообще грузы в списке
+        if (truckCargoSystem == null || truckCargoSystem.loadedCargos == null || truckCargoSystem.loadedCargos.Count == 0)
         {
             _rb.centerOfMass = baseCenterOfMass;
             loadFactor = 0f;
             return;
         }
-        Transform cargoTransform = truckCargoSystem.currentCargo;
-        Rigidbody cargoRb = cargoTransform.GetComponent<Rigidbody>();
-        if (cargoRb != null)
-        {
-            float currentCargoMass = cargoRb.mass;
-            Vector3 localCargoPos = transform.InverseTransformPoint(cargoRb.worldCenterOfMass);
-            float totalMass = _rb.mass + currentCargoMass;
-            Vector3 dynamicCom = ((baseCenterOfMass * _rb.mass) + (localCargoPos * currentCargoMass)) / totalMass;
 
-            dynamicCom.y = Mathf.Clamp(dynamicCom.y, baseCenterOfMass.y - 0.1f, baseCenterOfMass.y + 0.3f);
-            _rb.centerOfMass = dynamicCom;
-            float maxCargoMass = 1100f;
-            loadFactor = Mathf.Clamp01(currentCargoMass / maxCargoMass);
+        Vector3 totalCargoWeightedPosition = Vector3.zero;
+        float accumulatedCargoMass = 0f;
+
+        // Итерируемся по всем загруженным трансформам из списка
+        foreach (Transform cargoTransform in truckCargoSystem.loadedCargos)
+        {
+            if (cargoTransform == null) continue;
+
+            Rigidbody cargoRb = cargoTransform.GetComponent<Rigidbody>();
+            if (cargoRb != null)
+            {
+                // Переводим мировой центр масс конкретной коробки в локальные координаты пикапа
+                Vector3 localCargoPos = transform.InverseTransformPoint(cargoRb.worldCenterOfMass);
+
+                // Взвешиваем позицию (умножаем на массу объекта)
+                totalCargoWeightedPosition += localCargoPos * cargoRb.mass;
+
+                // Суммируем массу
+                accumulatedCargoMass += cargoRb.mass;
+            }
         }
+
+        // Если у объектов в кузове нет Rigidbody или масса равна 0, сбрасываем CoM
+        if (accumulatedCargoMass <= 0f)
+        {
+            _rb.centerOfMass = baseCenterOfMass;
+            loadFactor = 0f;
+            return;
+        }
+
+        // Вычисляем финальный совокупный центр масс машины и всех её грузов
+        float totalMass = _rb.mass + accumulatedCargoMass;
+        Vector3 dynamicCom = ((baseCenterOfMass * _rb.mass) + totalCargoWeightedPosition) / totalMass;
+
+        // Небольшой зажим по высоте (Y), чтобы гора коробок до небес не переворачивала пикап на ровном месте
+        dynamicCom.y = Mathf.Clamp(dynamicCom.y, baseCenterOfMass.y - 0.1f, baseCenterOfMass.y + 0.4f);
+
+        // Применяем центр масс к Rigidbody машины
+        _rb.centerOfMass = dynamicCom;
+
+        // Обновляем loadFactor для адаптивной подвески колес
+        float maxCargoMass = 1100f; // Максимальная грузоподъемность пикапа
+        loadFactor = Mathf.Clamp01(accumulatedCargoMass / maxCargoMass);
     }
 
     private void CheckInput()
