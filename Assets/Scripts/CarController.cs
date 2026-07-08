@@ -7,6 +7,7 @@ public class CarController : MonoBehaviour
     [SerializeField] private Wheel[] _wheels;
     [SerializeField] private GameObject _lights;
     [SerializeField] private GameObject _lightsBackMove;
+    public CarAudioController carAudio;
 
     // Центр массы
     [SerializeField] private Vector3 _emptyCenterOfMass = new Vector3(0, -0.65f, 0f);
@@ -103,6 +104,11 @@ public class CarController : MonoBehaviour
         CheckInput();
         Move();
         Steer();
+        bool isReverseInput = _verticalInput < -0.1f;
+        float throttle = Mathf.Max(0f, _verticalInput);           // газ только вперёд
+        float brake = _brakeInput;                                // уже обработано в CheckInput
+
+        carAudio.UpdateCarAudio(throttle, brake, isReverseInput, _rb.linearVelocity.magnitude);
     }
 
     private void FixedUpdate()
