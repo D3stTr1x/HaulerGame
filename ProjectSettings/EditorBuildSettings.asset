@@ -12,7 +12,7 @@ EditorBuildSettings:
     path: Assets/Scenes/MainMenu.unity
     guid: eabd86069541e3f47a78ec61f93827c3
   - enabled: 1
-    path: Assets/Drivable-Free Low Poly Cars/Demo/Demo.unity
+    path: Assets/Scenes/Demo.unity
     guid: 95d40b56aff914b4a8b962c01ad2fe1d
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
