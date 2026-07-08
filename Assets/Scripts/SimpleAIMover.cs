@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -32,15 +33,14 @@ public class SimpleAIMover : MonoBehaviour
         Debug.Log($"{zones.Length} zones found");
         if (zones != null)
         {
-            //if (waypoints == null)
-            //{
-                waypoints = new Transform[zones.Length];
-                for (int i = 0; i < zones.Length; i++)
-                {
-                    waypoints[i] = zones[i].transform;
-                }
-            //}
+            zones = zones.OrderBy(x => Random.value).ToArray();       
+            waypoints = new Transform[zones.Length];
+            for (int i = 0; i < zones.Length; i++)
+            {
+                waypoints[i] = zones[i].transform;
+            }
         }
+        Debug.Log($"{waypoints}");
         return waypoints;
     }
     // Update is called once per frame

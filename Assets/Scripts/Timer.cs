@@ -5,17 +5,31 @@ using UnityEngine;
 public class Timer : MonoBehaviour
 {
     public TextMeshProUGUI timeText;
+    public static Timer Instance;
     private int time;
-
+    private void Awake()
+    {
+        if (Instance == null)
+            Instance = this;
+        else Destroy(gameObject);
+    }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        time = 600;
+        time = 120;
         UpdateTimer();
     }
     void UpdateTimer()
     {
         InvokeRepeating("UpdateTimeDisplay", 0, 1);
+    }
+    public void AddTime(int s)
+    {
+        time += s;
+    }
+    public void AddTime()
+    {
+        time += 30;
     }
     void UpdateTimeDisplay()
     {

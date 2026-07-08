@@ -10,7 +10,10 @@ public class DeliveryZone : MonoBehaviour
     {
         Package box = other.GetComponent<Package>();
         if (box)
+        {
             MarkDelivered(box);
+            Destroy(other.gameObject);
+        }
         else return;
     }
     void MarkDelivered(Package box) 
@@ -19,7 +22,10 @@ public class DeliveryZone : MonoBehaviour
         {
             SimpleScore.Instance.UpdateScore(pts);
         }
-       
+        if (Timer.Instance != null)
+        {
+            Timer.Instance.AddTime();
+        }
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()

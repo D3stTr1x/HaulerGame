@@ -29,6 +29,8 @@ public class CargoPickup : MonoBehaviour
     {
         renderers = GetComponentsInChildren<Renderer>();
         rb = GetComponentInParent<Rigidbody>(); // находим Rigidbody на родителе
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        cargoHoldPoint = player.GetComponent<TruckCargoSystem>().cargoHoldPoint;
     }
 
     private void Update()

@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7286225648612162804}
   - component: {fileID: 3405736660271565637}
   - component: {fileID: 3560617487075867128}
-  m_Layer: 7
+  m_Layer: 9
   m_Name: DeliveryZone (2)
   m_TagString: DeliveryZone
   m_Icon: {fileID: 0}
