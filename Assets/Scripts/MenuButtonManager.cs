@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 public class MenuButtonManager : MonoBehaviour
 {
     [SerializeField] private string menuSceneName = "MainMenu";
-    [SerializeField] private string gameSceneName = "gameSceneName";
+    [SerializeField] private string gameSceneName = "Demo";
 
     [SerializeField] private Image menuImg;
     [SerializeField] private Button menuButton1;

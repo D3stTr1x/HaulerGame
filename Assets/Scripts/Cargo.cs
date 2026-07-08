@@ -2,6 +2,7 @@ using System.Threading;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.UI;
 
 public class Cargo : MonoBehaviour
@@ -9,6 +10,7 @@ public class Cargo : MonoBehaviour
     //healthbar govna ne rabotaet
     //public UnityEvent onPackagePickedUp;
     public UnityEvent onCargoDelivered;
+    public int pts;
 
     private float health;
     private float maxHealth = 100f;
@@ -70,11 +72,17 @@ public class Cargo : MonoBehaviour
         {
             onCargoDelivered.AddListener(minimapMarkers.DestroyMarkers);
         }
+        Score score = GameObject.FindFirstObjectByType<Score>();
+        if (score != null)
+        {
+            onCargoDelivered.AddListener(score.UpdateCargosDelivered);
+        }
     }
     void Start()
     {
-        penalty = -((int) maxHealth / 10);
+        penalty = -((int) maxHealth / 4);
         health = maxHealth;
+        pts = (int)maxHealth / 2;
     }
     void TakeDamage(float dmg)
     {
@@ -82,7 +90,10 @@ public class Cargo : MonoBehaviour
         Debug.Log($"dmg taken: {dmg}, cur hp: {health}");
         if (health <= 0)
         {
-            UpdateScore(penalty);
+            if (Score.Instance != null)
+            {
+                Score.Instance.UpdateScore(penalty);
+            }
             Die();
         }
     }
@@ -93,13 +104,6 @@ public class Cargo : MonoBehaviour
         float dmg = collision.relativeVelocity.magnitude;
         if (dmg > 3)
             TakeDamage(dmg);
-    }
-    void UpdateScore(int score)
-    {
-        if (SimpleScore.Instance != null)
-        {
-            SimpleScore.Instance.UpdateScore(score);
-        }
     }
     void Die()
     {

@@ -18,10 +18,9 @@ public class DeliveryZone : MonoBehaviour
     }
     void MarkDelivered(Cargo box) 
     {
-        if (SimpleScore.Instance != null)
+        if (Score.Instance != null)
         {
-            SimpleScore.Instance.UpdateScore(pts);
-            SimpleScore.Instance.UpdateCargosDelivered();
+            Score.Instance.UpdateScore(box.pts);
         }
         if (Timer.Instance != null)
         {

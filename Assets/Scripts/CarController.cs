@@ -1,7 +1,6 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
-
 public class CarController : MonoBehaviour
 {
     [SerializeField] private Transform _centreOfMass;
@@ -9,89 +8,94 @@ public class CarController : MonoBehaviour
     [SerializeField] private GameObject _lights;
     [SerializeField] private GameObject _lightsBackMove;
 
-    //смещениие центра массы
-    [SerializeField] private Vector3 _emptyCenterOfMass = new Vector3(0, -0.5f, 0);
-    [SerializeField] private Vector3 _loadedCenterOfMassOffset = new Vector3(0, -0.8f, -0.6f); // X, Y, Z смещение при полной загрузке
+    // Центр массы
+    [SerializeField] private Vector3 _emptyCenterOfMass = new Vector3(0, -0.65f, 0f);
+    [SerializeField] private Vector3 _loadedCoMOffset = new Vector3(0.0f, 0.35f, -0.75f); // исправлено: вниз + назад
 
-    private Vector3 originalCenterOfMass;
-
-
+    private Vector3 baseCenterOfMass;
     private Rigidbody _rb;
-    [SerializeField] private int _motorForce;
-    [SerializeField] private int _brakeForce;
-    [SerializeField] private float _engineBrakeForce;
-    [SerializeField] private float _maxSpeedForvard;
-    [SerializeField] private float _maxSpeedRevers;
+
+    [SerializeField] private int _motorForce = 2600;
+    [SerializeField] private AnimationCurve _powerCurve = AnimationCurve.EaseInOut(0, 1, 1, 0.35f);
+    [SerializeField] private int _brakeForce = 4200;
+    private float _currentBrakeForce;
+    [SerializeField] private float _engineBrakeForce = 950f;
+
+    [SerializeField] private float _maxSpeedForvard = 48f;
+    [SerializeField] private float _maxSpeedRevers = 14f;
 
     private float loadFactor = 0f;
-
     [SerializeField] private float _brakeInput;
     private float _verticalInput;
     private float _horizontalInput;
     private float massCargo = 0f;
-
     [SerializeField] public float _speed;
 
     [SerializeField] private AnimationCurve _emptySterlingCurve;
     [SerializeField] private AnimationCurve _loadedSterlingCurve;
 
-    private JointSpring[] initialSprings;
-    private WheelFrictionCurve[] initialForwardFrictions;
-    private WheelFrictionCurve[] initialSidewaysFrictions;
-
     private TruckCargoSystem truckCargoSystem;
+
+    // Для оптимизации обновления настроек колёс
+    private float lastLoadFactor = -1f;
+    private const float loadThreshold = 0.03f;
 
     private void Start()
     {
         _rb = GetComponent<Rigidbody>();
-        _rb.centerOfMass = _centreOfMass != null ? _centreOfMass.localPosition : new Vector3(0, -0.5f, 0);
-        originalCenterOfMass = _rb.centerOfMass;
-        _rb.mass = 2800f;
-        _rb.linearDamping = 0.5f;
-        _rb.angularDamping = 0.5f;
+
+        _rb.mass = 2600f;
+        _rb.linearDamping = 0.45f;
+        _rb.angularDamping = 0.8f;
         _rb.interpolation = RigidbodyInterpolation.Interpolate;
         _rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
-        truckCargoSystem = _rb.GetComponent<TruckCargoSystem>();
 
+        _rb.centerOfMass = _emptyCenterOfMass;
+        baseCenterOfMass = _emptyCenterOfMass;
+
+        truckCargoSystem = GetComponent<TruckCargoSystem>();
+
+        InitializeWheels();
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
+
+    private void InitializeWheels()
+    {
         foreach (Wheel wheel in _wheels)
         {
             var c = wheel.WheelCollider;
 
-            // === Подвеска (Suspension) ===
+            //Подвеска
             JointSpring spring = c.suspensionSpring;
-            spring.spring = 45000f;        // Жёстче чем у легковушки
-            spring.damper = 2800f;         // Хорошее демпфирование
+            spring.spring = 38000f;
+            spring.damper = 2400f;
             spring.targetPosition = 0.5f;
             c.suspensionSpring = spring;
 
-            c.suspensionDistance = 0.65f;  // Ход подвески
-            c.forceAppPointDistance = -0.05f; // Точка приложения силы (чуть ниже)
+            c.suspensionDistance = 0.68f;
+            c.forceAppPointDistance = -0.04f;
 
-            // === Радиус и масса ===
-            c.radius = 0.45f;           // ~35-37 дюймовые колёса
-            c.mass = 45f;
+            c.radius = 0.45f;
+            c.mass = 42f;
 
-            // === Трение (Friction) ===
-            // Forward Friction (разгон и торможение)
+            // Forward Friction
             WheelFrictionCurve fwd = c.forwardFriction;
-            fwd.extremumSlip = 0.35f;
-            fwd.extremumValue = 1.15f;
-            fwd.asymptoteSlip = 0.75f;
-            fwd.asymptoteValue = 0.75f;
+            fwd.extremumSlip = 0.32f;
+            fwd.extremumValue = 1.12f;
+            fwd.asymptoteSlip = 0.72f;
+            fwd.asymptoteValue = 0.78f;
             c.forwardFriction = fwd;
 
-            // Sideways Friction (боковое сцепление)
+            // Sideways Friction
             WheelFrictionCurve side = c.sidewaysFriction;
-            side.extremumSlip = 0.25f;
-            side.extremumValue = 1.1f;
-            side.asymptoteSlip = 0.55f;
-            side.asymptoteValue = 0.85f;
+            side.extremumSlip = 0.24f;
+            side.extremumValue = 1.08f;
+            side.asymptoteSlip = 0.52f;
+            side.asymptoteValue = 0.82f;
             c.sidewaysFriction = side;
         }
-
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-
     }
 
     private void Update()
@@ -99,124 +103,127 @@ public class CarController : MonoBehaviour
         CheckInput();
         Move();
         Steer();
-        Brake();
-        CheckLoad();
-        UpdateWheelSettings();
-        UpdateCenterOfMass();
     }
 
     private void FixedUpdate()
     {
-        foreach (Wheel wheel in _wheels)
-        {
-            if (wheel.IsForwardWheels)
-            {
-                float slipAngel = Vector3.Angle(transform.forward, _rb.linearVelocity - transform.forward);
-            }
-        }
-
+        CalculateDynamicCenterOfMass();
+        UpdateWheelSettingsOptimized();
+        ApplyMotorTorque();
+        _currentBrakeForce =Mathf.MoveTowards(_currentBrakeForce, _brakeForce * _brakeInput, Time.fixedDeltaTime * 8000f);
+        ApplyBrakes();
     }
-    private void UpdateCenterOfMass()
+
+
+    private void CalculateDynamicCenterOfMass()
     {
-        if (loadFactor <= 0.01f)
+        // Проверяем, есть ли вообще грузы в списке
+        if (truckCargoSystem == null || truckCargoSystem.loadedCargos == null || truckCargoSystem.loadedCargos.Count == 0)
         {
-            _rb.centerOfMass = originalCenterOfMass;
+            _rb.centerOfMass = baseCenterOfMass;
+            loadFactor = 0f;
             return;
         }
 
-        // Плавная интерполяция центра масс
-        Vector3 targetCoM = originalCenterOfMass + _loadedCenterOfMassOffset * loadFactor;
+        Vector3 totalCargoWeightedPosition = Vector3.zero;
+        float accumulatedCargoMass = 0f;
 
-        // Дополнительно немного опускаем центр масс при сильной загрузке (очень важно!)
-        targetCoM.y = Mathf.Lerp(originalCenterOfMass.y, originalCenterOfMass.y - 0.7f, loadFactor);
-
-        _rb.centerOfMass = targetCoM;
-        Debug.Log("centerOfMass" +  _rb.centerOfMass);
-    }
-
-    private void CheckLoad()
-    {
-        if (truckCargoSystem.currentCargo != null)
+        // Итерируемся по всем загруженным трансформам из списка
+        foreach (Transform cargoTransform in truckCargoSystem.loadedCargos)
         {
-            // Берём массу напрямую из Rigidbody груза
-            Rigidbody cargoRb = truckCargoSystem.currentCargo.GetComponent<Rigidbody>();
+            if (cargoTransform == null) continue;
+
+            Rigidbody cargoRb = cargoTransform.GetComponent<Rigidbody>();
             if (cargoRb != null)
             {
-                massCargo = cargoRb.mass;
+                // Переводим мировой центр масс конкретной коробки в локальные координаты пикапа
+                Vector3 localCargoPos = transform.InverseTransformPoint(cargoRb.worldCenterOfMass);
+
+                // Взвешиваем позицию (умножаем на массу объекта)
+                totalCargoWeightedPosition += localCargoPos * cargoRb.mass;
+
+                // Суммируем массу
+                accumulatedCargoMass += cargoRb.mass;
             }
-            else
-            {
-                // Fallback — если есть публичное поле massCargo на скрипте CargoPickup
-                CargoPickup cargoScript = truckCargoSystem.currentCargo.GetComponent<CargoPickup>();
-                if (cargoScript != null)
-                    massCargo = cargoScript.massCargo;
-            }
         }
-        else
+
+        // Если у объектов в кузове нет Rigidbody или масса равна 0, сбрасываем CoM
+        if (accumulatedCargoMass <= 0f)
         {
-            massCargo = 0f;
+            _rb.centerOfMass = baseCenterOfMass;
+            loadFactor = 0f;
+            return;
         }
 
-        float emptyMass = 2800f;           // пустая масса грузовика
-        float maxCargoMass = 300f;        // максимальная масса груза (подстрой)
+        // Вычисляем финальный совокупный центр масс машины и всех её грузов
+        float totalMass = _rb.mass + accumulatedCargoMass;
+        Vector3 dynamicCom = ((baseCenterOfMass * _rb.mass) + totalCargoWeightedPosition) / totalMass;
 
-        loadFactor = Mathf.Clamp01((massCargo) / maxCargoMass); // теперь правильно
-    }
+        // Небольшой зажим по высоте (Y), чтобы гора коробок до небес не переворачивала пикап на ровном месте
+        dynamicCom.y = Mathf.Clamp(dynamicCom.y, baseCenterOfMass.y - 0.1f, baseCenterOfMass.y + 0.4f);
 
+        // Применяем центр масс к Rigidbody машины
+        _rb.centerOfMass = dynamicCom;
 
-    private void Move()
-    {
-        _speed = _rb.linearVelocity.magnitude;
+//<<<<<<< HEAD
+//    private void Move()
+//    {
+//        _speed = _rb.linearVelocity.magnitude;
 
-        foreach (Wheel wheel in _wheels)
-        {
-            float motorTorque = 0f;
-            float currentMaxSpeed = _verticalInput > 0 ? _maxSpeedForvard : _maxSpeedRevers;
-            //float currentMaxSpeed = 9999999f;
+//        foreach (Wheel wheel in _wheels)
+//        {
+//            float motorTorque = 0f;
+//            float currentMaxSpeed = _verticalInput > 0 ? _maxSpeedForvard : _maxSpeedRevers;
+//            //float currentMaxSpeed = 9999999f;
 
-            if (Mathf.Abs(_verticalInput) > 0.01f && _speed < currentMaxSpeed)
-            {
-                float speedLimit = Mathf.Clamp01(1f - (_speed / currentMaxSpeed));
-                //float speedLimit = 9999999f;
-                motorTorque = _motorForce * _verticalInput * speedLimit;
-            }
-            else if (_speed > 0.5f && Mathf.Abs(_verticalInput) < 0.01f)
-            {
-                // Двигательное торможение (engine brake)
-                motorTorque = -Mathf.Sign(Vector3.Dot(_rb.linearVelocity, transform.forward)) * _engineBrakeForce;
-                if (Vector3.Dot(transform.forward * motorTorque, _rb.linearVelocity.normalized) > 0)
-                    motorTorque = 0;
-            }
+//            if (Mathf.Abs(_verticalInput) > 0.01f && _speed < currentMaxSpeed)
+//            {
+//                float speedLimit = Mathf.Clamp01(1f - (_speed / currentMaxSpeed));
+//                //float speedLimit = 9999999f;
+//                motorTorque = _motorForce * _verticalInput * speedLimit;
+//            }
+//            else if (_speed > 0.5f && Mathf.Abs(_verticalInput) < 0.01f)
+//            {
+//                // Двигательное торможение (engine brake)
+//                motorTorque = -Mathf.Sign(Vector3.Dot(_rb.linearVelocity, transform.forward)) * _engineBrakeForce;
+//                if (Vector3.Dot(transform.forward * motorTorque, _rb.linearVelocity.normalized) > 0)
+//                    motorTorque = 0;
+//            }
 
-            wheel.WheelCollider.motorTorque = motorTorque;
-            wheel.UpdateMeshPosition();
-        }
+//            wheel.WheelCollider.motorTorque = motorTorque;
+//            wheel.UpdateMeshPosition();
+//        }
 
-        bool isReversingInput = _verticalInput < 0;
+//        bool isReversingInput = _verticalInput < 0;
 
-        if (isReversingInput && IsMovingForward)
-        {
-            _lightsBackMove.gameObject.SetActive(false);
-            _lights.gameObject.SetActive(true);
-        }
-        else if (isReversingInput && !IsMovingForward)
-        {
-            _lights.gameObject.SetActive(false);
-            _lightsBackMove.gameObject.SetActive(true);
-        }
-        else
-        {
-            _lights.gameObject.SetActive(false);
-            _lightsBackMove.gameObject.SetActive(false);
-        }
-    }
+//        if (isReversingInput && IsMovingForward)
+//        {
+//            _lightsBackMove.gameObject.SetActive(false);
+//            _lights.gameObject.SetActive(true);
+//        }
+//        else if (isReversingInput && !IsMovingForward)
+//        {
+//            _lights.gameObject.SetActive(false);
+//            _lightsBackMove.gameObject.SetActive(true);
+//        }
+//        else
+//        {
+//            _lights.gameObject.SetActive(false);
+//            _lightsBackMove.gameObject.SetActive(false);
+//        }
+//    }
 
-    public bool IsMovingForward
-    {
-        get
-        {
-            return Vector3.Dot(transform.forward, _rb.linearVelocity) > 0.5f;
-        }
+//    public bool IsMovingForward
+//    {
+//        get
+//        {
+//            return Vector3.Dot(transform.forward, _rb.linearVelocity) > 0.5f;
+//        }
+//=======
+        // Обновляем loadFactor для адаптивной подвески колес
+        float maxCargoMass = 1100f; // Максимальная грузоподъемность пикапа
+        loadFactor = Mathf.Clamp01(accumulatedCargoMass / maxCargoMass);
+//>>>>>>> 782b5c22997a972141efc3ea4c54946a0d266d43
     }
 
     private void CheckInput()
@@ -226,76 +233,142 @@ public class CarController : MonoBehaviour
 
         float movingDirectional = Vector3.Dot(transform.forward, _rb.linearVelocity);
 
-        if ((movingDirectional < -0.5f && _verticalInput > 0) || (movingDirectional > 0.5f && _verticalInput < 0))
+        if ((movingDirectional < -0.5f && _verticalInput > 0) ||
+            (movingDirectional > 0.5f && _verticalInput < 0))
             _brakeInput = Mathf.Abs(_verticalInput);
         else
             _brakeInput = 0;
-
     }
 
-    private void Brake()
+    private void ApplyMotorTorque()
+    {
+        _speed = _rb.linearVelocity.magnitude;
+        float effectiveMotorForce = _motorForce * _powerCurve.Evaluate(loadFactor);
+
+        foreach (Wheel wheel in _wheels)
+        {
+            float motorTorque = 0f;
+            float currentMaxSpeed = _verticalInput > 0 ? _maxSpeedForvard : _maxSpeedRevers;
+
+            if (Mathf.Abs(_verticalInput) > 0.01f && _speed < currentMaxSpeed)
+            {
+                float speedLimit = Mathf.Clamp01(1f - (_speed / currentMaxSpeed));
+                motorTorque = effectiveMotorForce * _verticalInput * speedLimit;
+            }
+            else if (_speed > 0.6f && Mathf.Abs(_verticalInput) < 0.01f)
+            {
+                motorTorque = -Mathf.Sign(Vector3.Dot(_rb.linearVelocity, transform.forward)) * _engineBrakeForce;
+            }
+
+            wheel.WheelCollider.motorTorque = motorTorque;
+            wheel.UpdateMeshPosition();
+        }
+    }
+
+    private void ApplyBrakes()
     {
         foreach (Wheel wheel in _wheels)
         {
             if (wheel.IsForwardWheels)
-            {
-                wheel.WheelCollider.brakeTorque = _brakeForce * _brakeInput * 0.7f;
-            }
+                wheel.WheelCollider.brakeTorque = _brakeForce * _brakeInput * 0.72f;
             else
-            {
-                wheel.WheelCollider.brakeTorque = _brakeForce * _brakeInput * 0.3f;
-            }
+                wheel.WheelCollider.brakeTorque = _brakeForce * _brakeInput * 0.28f;
         }
-
     }
 
     private void Steer()
     {
         AnimationCurve _sterlingCurve = (loadFactor > 0.3f) ? _loadedSterlingCurve : _emptySterlingCurve;
-
         float steeringAngle = _horizontalInput * _sterlingCurve.Evaluate(_speed);
         steeringAngle = Mathf.Clamp(steeringAngle, -42f, 42f);
 
         foreach (Wheel wheel in _wheels)
         {
-            if (wheel.IsForwardWheels && wheel.WheelCollider != null)
+            if (wheel.IsForwardWheels)
                 wheel.WheelCollider.steerAngle = steeringAngle;
         }
     }
 
-    void UpdateWheelSettings()
+    // Оптимизированное обновление настроек колёс
+    private void UpdateWheelSettingsOptimized()
     {
+        if (Mathf.Abs(loadFactor - lastLoadFactor) < loadThreshold) return;
+
+        lastLoadFactor = loadFactor;
         float t = loadFactor;
 
         foreach (Wheel wheel in _wheels)
         {
-            var c = wheel.WheelCollider;
+            if (!wheel.IsForwardWheels)
+            {
+                var c = wheel.WheelCollider;
 
-            // === Подвеска ===
-            JointSpring spring = c.suspensionSpring;
-            spring.spring = Mathf.Lerp(42000f, 68000f, t);
-            spring.damper = Mathf.Lerp(2600f, 4200f, t);
-            spring.targetPosition = 0.48f;
-            c.suspensionSpring = spring;
+                JointSpring spring = c.suspensionSpring;
+                spring.spring = Mathf.Lerp(36000f, 65000f, t);     // мягче в пустом состоянии
+                spring.damper = Mathf.Lerp(2200f, 3800f, t);
+                spring.targetPosition = 0.48f;
+                c.suspensionSpring = spring;
 
-            c.suspensionDistance = Mathf.Lerp(0.68f, 0.55f, t);
-            c.forceAppPointDistance = Mathf.Lerp(-0.03f, -0.08f, t);
+                c.suspensionDistance = Mathf.Lerp(0.70f, 0.56f, t);
+                c.forceAppPointDistance = Mathf.Lerp(-0.03f, -0.07f, t);
 
-            // === Трение ===
-            WheelFrictionCurve fwd = c.forwardFriction;
-            fwd.extremumValue = Mathf.Lerp(1.1f, 1.25f, t);
-            fwd.asymptoteValue = Mathf.Lerp(0.75f, 0.8f, t);
-            c.forwardFriction = fwd;
+                // Friction
+                WheelFrictionCurve fwd = c.forwardFriction;
+                fwd.extremumValue = Mathf.Lerp(1.08f, 1.22f, t);
+                fwd.asymptoteValue = Mathf.Lerp(0.76f, 0.81f, t);
+                c.forwardFriction = fwd;
 
-            WheelFrictionCurve side = c.sidewaysFriction;
-            side.extremumValue = Mathf.Lerp(1.15f, 1.05f, t); // хуже боковое сцепление при загрузке
-            side.asymptoteValue = Mathf.Lerp(0.85f, 0.75f, t);
-            c.sidewaysFriction = side;
+                WheelFrictionCurve side = c.sidewaysFriction;
+                side.extremumValue = Mathf.Lerp(1.12f, 1.02f, t);
+                side.asymptoteValue = Mathf.Lerp(0.84f, 0.73f, t);
+                c.sidewaysFriction = side;
+            }
         }
     }
 
+    private void Move()
+    {
+        // Логика огней оставлена в Update (как было)
+        bool isReversingInput = _verticalInput < 0;
+        bool isMovingForward = Vector3.Dot(transform.forward, _rb.linearVelocity) > 0.5f;
+
+        if (isReversingInput && isMovingForward)
+        {
+            _lights.SetActive(true);
+            _lightsBackMove.SetActive(false);
+        }
+        else if (isReversingInput && !isMovingForward)
+        {
+            _lights.SetActive(false);
+            _lightsBackMove.SetActive(true);
+        }
+        else
+        {
+            _lights.SetActive(false);
+            _lightsBackMove.SetActive(false);
+        }
+    }
+
+    private void OnDrawGizmos()
+    {
+        // Получаем Rigidbody, если он еще не назначен (нужно для работы в редакторе)
+        Rigidbody debugRb = _rb;
+        if (debugRb == null)
+            debugRb = GetComponent<Rigidbody>();
+
+        if (debugRb != null)
+        {
+            // Переводим локальный центр масс в мировые координаты
+            Vector3 worldCoM = transform.TransformPoint(debugRb.centerOfMass);
+
+            // Рисуем красную сферу размером 0.3 метра
+            Gizmos.color = Color.red;
+            Gizmos.DrawSphere(worldCoM, 0.3f);
+        }
+    }
 }
 
+// Wheel struct без изменений
 [System.Serializable]
 public struct Wheel
 {
@@ -307,9 +380,7 @@ public struct Wheel
     {
         Vector3 position;
         Quaternion rotation;
-
         WheelCollider.GetWorldPose(out position, out rotation);
-
         WheelMesh.position = position;
         WheelMesh.rotation = rotation;
     }
