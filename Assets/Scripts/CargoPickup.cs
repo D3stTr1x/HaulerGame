@@ -12,6 +12,10 @@ public class CargoPickup : MonoBehaviour
     [SerializeField] private float fallCheckInterval = 0.5f;
     [SerializeField] private float pickupDuration = 1.2f; // Время плавного подъема
     [SerializeField] private TMP_Text HelpText;
+    //[SerializeField] private AudioClip boxSound;
+    /// <summary>
+    /// [SerializeField] private AudioClip barrelSound;
+    /// </summary>
 
     [Header("Визуал")]
     [SerializeField] private float pulseSpeed = 2f;
