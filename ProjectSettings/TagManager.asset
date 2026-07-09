@@ -9,6 +9,7 @@ TagManager:
   - DeliveryZone
   - ZoneSpawner
   - MinimapCamera
+  - PickUpTrigger
   layers:
   - Default
   - TransparentFX

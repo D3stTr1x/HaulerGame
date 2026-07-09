@@ -32,9 +32,8 @@ public class CargoPickup : MonoBehaviour
     private Transform currentCargoInTruck = null;
 
     public UnityEvent onCargoPickedUp; //events (for ZoneSpawner)
-    //public UnityEvent onCargoFallen; //idk, maybe will be used later
     public bool isPickedUp;
-    //public bool isFallen;
+
     public bool IsPickedUp
     {
         get => isPickedUp;
@@ -51,33 +50,11 @@ public class CargoPickup : MonoBehaviour
             }
         }
     }
-    //public bool IsFallen
-    //{
-    //    get => IsFallen;
-    //    set
-    //    {
-    //        if (IsFallen != value)
-    //        {
-    //            IsFallen = value;
-    //            if (IsFallen)
-    //            {
-    //                onCargoFallen?.Invoke();
-    //                Debug.Log($"Package fallen, event fired");
-    //            }
-    //        }
-    //    }
-    //}
-
 
     private void Awake()
     {
         renderers = GetComponentsInChildren<Renderer>();
         rb = GetComponentInParent<Rigidbody>();
-        //rb = GetComponentInParent<Rigidbody>(); // находим Rigidbody на родителе
-
-        //find player and add cargoHoldPoint
-        //GameObject player = GameObject.FindGameObjectWithTag("Player");
-        //cargoHoldPoint = player.GetComponent<TruckCargoSystem>().cargoHoldPoint;
 
         //adding event listeners
         TaskText taskText = GameObject.FindFirstObjectByType<TaskText>();
@@ -90,6 +67,15 @@ public class CargoPickup : MonoBehaviour
         {
             onCargoPickedUp.AddListener(zoneSpawner.ActivateRandom);
         }     
+    }
+    private void Start()
+    {
+        SphereCollider sphereCollider = GetComponentInChildren<SphereCollider>();
+        if (sphereCollider)
+        {
+            float maxScale = Mathf.Max(transform.lossyScale.x, transform.lossyScale.y, transform.lossyScale.z);
+            sphereCollider.radius = pickupDistance / maxScale;
+        }
     }
 
     private void Update()
