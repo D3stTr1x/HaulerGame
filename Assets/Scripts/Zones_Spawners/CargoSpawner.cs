@@ -15,7 +15,8 @@ public class CargoSpawner : MonoBehaviour
     void Start()
     {
         FindZones();
-        DeactivateAll();
+        //DeactivateAll();
+        ActivateRandom();
     }
     void FindZones()
     {
@@ -55,10 +56,22 @@ public class CargoSpawner : MonoBehaviour
         }
         cargoZones[idx].gameObject.SetActive(true);
 
+        GetActiveZones();
 
         //activeZoneExists = true;
         //}
         //else return;
+    }
+    public void SpawnRandomInActive()
+    {
+        Debug.Log("SpawnRandom in active called");
+        GameObject[] cargos = new GameObject[] { smallPrefab, bigPrefab, longPrefab };
+        foreach (CargoSpawnZone zone in activeZones)
+        {
+            int idx = Random.Range(0, cargos.Length);
+            zone.SpawnCargo(cargos[idx]);
+            
+        }
     }
     void GetActiveZones()
     {

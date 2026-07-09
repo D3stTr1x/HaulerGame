@@ -23,9 +23,18 @@ public class CargoSpawnZone : MonoBehaviour
     //{
 
     //}
+ 
     public void SpawnCargo(GameObject cargo)
     {
+        //Debug.Log("Something spawned");
+        //Transform pos = gameObject.transform;
+        //pos.localScale = cargo.transform.localScale;
+        Transform pos = cargo.transform;
+        pos.position = transform.position;
+        pos.position = new Vector3(pos.position.x + Random.Range(-7.5f, 7.5f), pos.position.y - 4f, pos.position.z + Random.Range(-7.5f, 7.5f));
+        //pos.Sca
 
+        GameObject.Instantiate(cargo, pos);
     }
     // Update is called once per frame
     void Update()

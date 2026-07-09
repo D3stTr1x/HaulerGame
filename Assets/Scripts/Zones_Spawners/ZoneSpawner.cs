@@ -60,6 +60,7 @@ public class ZoneSpawner : MonoBehaviour
         }
         else return;
     }
+
     public void DeactivateZone(GameObject zone)
     {
         if (deliveryZones.Contains(zone.GetComponent<DeliveryZone>()))
