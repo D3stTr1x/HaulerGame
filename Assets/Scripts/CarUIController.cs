@@ -16,6 +16,7 @@ public class CarUIController : MonoBehaviour
     private PlayerCarController playerCar;
     private Rigidbody rb;
 
+
     private void Awake()
     {
         // Ищем машину по тегу или через FindObjectOfType
