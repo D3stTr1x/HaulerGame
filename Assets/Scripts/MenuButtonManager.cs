@@ -6,7 +6,8 @@ using UnityEngine.EventSystems;
 public class MenuButtonManager : MonoBehaviour
 {
     [SerializeField] private string menuSceneName = "MainMenu";
-    [SerializeField] private string gameSceneName = "Demo";
+    [SerializeField] private string gameDemoSceneName = "Demo";
+    [SerializeField] private string gameSceneName = "CItyScene";
 
     [SerializeField] private Image menuImg;
     [SerializeField] private Button menuButton1;
@@ -45,21 +46,18 @@ public class MenuButtonManager : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
-
-//<<<<<<< HEAD
-//        //SceneTransition.SwitchToScene(menuSceneName);
-//=======
         SceneManager.LoadScene(menuSceneName);
-//>>>>>>> 8a753caf606f4f12d1977cd188f184b4890ebb82
     }
 
     public void LoadGameScene()
     {
-//<<<<<<< HEAD
-//        //SceneTransition.SwitchToScene(gameSceneName);
-//=======
         SceneManager.LoadScene(gameSceneName);
-//>>>>>>> 8a753caf606f4f12d1977cd188f184b4890ebb82
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
+    public void LoadGameDemoScene()
+    {
+        SceneManager.LoadScene(gameDemoSceneName);
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
