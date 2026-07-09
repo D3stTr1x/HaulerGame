@@ -3231,6 +3231,163 @@ MonoBehaviour:
   pulseSpeed: 2
   pulseIntensity: 0.3
   massCargo: 0
+--- !u!1 &1212859726
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1212859727}
+  - component: {fileID: 1212859728}
+  - component: {fileID: 1212859729}
+  m_Layer: 0
+  m_Name: CarEngine
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1212859727
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1212859726}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.45, z: 1.75}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5533834931377141405}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!82 &1212859728
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1212859726}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 1
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &1212859729
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1212859726}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5145d4295fed7784f9a2eb9a99f2b26c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NewMonoBehaviourScript
+  idleClip: {fileID: 8300000, guid: 90b1cefd5fe9fdf4484c7cd0958f9f1f, type: 3}
+  accelClip: {fileID: 8300000, guid: 780756454e7ecf444990ab7f0d8d095b, type: 3}
+  sharpBrakeClip: {fileID: 8300000, guid: b7d994efc0c55734b9628b6111bfd95b, type: 3}
+  normalBrakeClip: {fileID: 8300000, guid: bf4d2cd3f3cd31841b74792d4ecb7428, type: 3}
+  reverseClip: {fileID: 8300000, guid: bd8dc297152e6ff44b6f661b901808c5, type: 3}
+  idleVolume: 0.7
+  accelVolume: 1
+  brakeVolume: 1
+  reverseVolume: 0.9
+  accelPitchMin: 0.8
+  accelPitchMax: 2
+  reversePitch: 1
+  sharpBrakeMinSpeed: 9.5
+  sharpBrakeTime: 1.8
+  normalBrakePitch: 0.75
 --- !u!1 &1304750587
 GameObject:
   m_ObjectHideFlags: 0
@@ -6125,6 +6282,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2073481205}
     - target: {fileID: 5267281821192377522, guid: 243cc9631b63cea4ca04e691e29a7364, type: 3}
+      propertyPath: carAudio
+      value: 
+      objectReference: {fileID: 1212859729}
+    - target: {fileID: 5267281821192377522, guid: 243cc9631b63cea4ca04e691e29a7364, type: 3}
       propertyPath: _brakeForce
       value: 30000
       objectReference: {fileID: 0}
@@ -6613,6 +6774,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2661927015839219273, guid: 243cc9631b63cea4ca04e691e29a7364, type: 3}
       insertIndex: -1
       addedObject: {fileID: 306494828}
+    - targetCorrespondingSourceObject: {fileID: 2661927015839219273, guid: 243cc9631b63cea4ca04e691e29a7364, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1212859727}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 6316243092183185112, guid: 243cc9631b63cea4ca04e691e29a7364, type: 3}
       insertIndex: 4
