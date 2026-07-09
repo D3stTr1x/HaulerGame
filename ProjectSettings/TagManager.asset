@@ -8,6 +8,7 @@ TagManager:
   - cargo
   - DeliveryZone
   - ZoneSpawner
+  - MinimapCamera
   layers:
   - Default
   - TransparentFX

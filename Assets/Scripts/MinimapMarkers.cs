@@ -17,6 +17,10 @@ public class MinimapMarkers : MonoBehaviour
     private float worldHalfHeight; 
     void Start()
     {
+        player = GameObject.FindGameObjectWithTag("Player").transform;
+        minimapCamera = GameObject.FindGameObjectWithTag("MinimapCamera").GetComponent<Camera>();
+        minimapRect = gameObject.GetComponent<RectTransform>();
+
         minimapHalfWidth = minimapRect.rect.width / 2 - borderPadding;
         minimapHalfHeight = minimapRect.rect.height / 2 - borderPadding;
         worldHalfWidth = 50f;
