@@ -41,7 +41,7 @@ public class Timer : MonoBehaviour
         }
         else
         {
-            TaskText taskText = GameObject.FindFirstObjectByType<TaskText>();
+            WarningText taskText = GameObject.FindFirstObjectByType<WarningText>();
             taskText.TimesUpMessage();
         }
     }

@@ -40,7 +40,7 @@ public class CargoBase : MonoBehaviour
     private void Awake()
     {
         //adding event listeners
-        TaskText taskText = GameObject.FindFirstObjectByType<TaskText>();
+        WarningText taskText = GameObject.FindFirstObjectByType<WarningText>();
         if (taskText != null)
         {
             onCargoDelivered.AddListener(taskText.PickupMessage);

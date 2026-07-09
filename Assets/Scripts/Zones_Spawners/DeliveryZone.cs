@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class DeliveryZone : MonoBehaviour
 {
-    private int pts = 30; //change later
+    //private int pts = 30; //change later
     private LoadedCargoHandler loadedCargoHandler;
     private ZoneSpawner zoneSpawner;
     private int numCargos;

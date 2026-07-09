@@ -68,14 +68,6 @@ public class ZoneSpawner : MonoBehaviour
         }
         activeZoneExists = false;
     }
-    //public void DeactivateIfDeliveredAll()
-    //{
-    //    Debug.Log("Zone deactivation event fired");
-    //    if ()
-    //    {
-    //        DeactivateAll();
-    //    }
-    //}
     // Update is called once per frame
     void Update()
     {

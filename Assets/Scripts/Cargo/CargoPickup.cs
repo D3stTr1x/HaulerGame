@@ -61,7 +61,7 @@ public class CargoPickup : MonoBehaviour
         rb = GetComponentInParent<Rigidbody>();
 
         //adding event listeners
-        TaskText taskText = GameObject.FindFirstObjectByType<TaskText>();
+        WarningText taskText = GameObject.FindFirstObjectByType<WarningText>();
         if (taskText != null)
         {
             onCargoPickedUp.AddListener(taskText.DeliverMessage);
