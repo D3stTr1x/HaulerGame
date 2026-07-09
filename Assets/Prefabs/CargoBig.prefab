@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6609290622001892759}
   - component: {fileID: 8296174414615271715}
   - component: {fileID: 5593944996645208448}
-  - component: {fileID: 6824184757792907221}
+  - component: {fileID: 7272524493214028272}
   m_Layer: 0
   m_Name: CargoBig
   m_TagString: cargo
@@ -167,7 +167,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &6824184757792907221
+--- !u!114 &7272524493214028272
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -176,13 +176,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 2923285970119328079}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0db1458bda5902841a3897d46feed0e2, type: 3}
+  m_Script: {fileID: 11500000, guid: 8d627692acc58e24da0d8c32d7016d85, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Package
+  m_EditorClassIdentifier: Assembly-CSharp::CargoBig
   onCargoDelivered:
     m_PersistentCalls:
       m_Calls: []
   pts: 0
+  health: 0
 --- !u!1 &5871086016171655822
 GameObject:
   m_ObjectHideFlags: 0

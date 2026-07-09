@@ -19,7 +19,7 @@ public class DeliveryZone : MonoBehaviour
             }
             Debug.Log($"Player entered trigger, numCargos: {numCargos}");
         }
-        Cargo box = other.GetComponent<Cargo>();
+        CargoBase box = other.GetComponent<CargoBase>();
         if (box)
         {
             MarkDelivered(box);
@@ -45,7 +45,7 @@ public class DeliveryZone : MonoBehaviour
             numDelivered = 0;
         }
     }
-    void MarkDelivered(Cargo box) 
+    void MarkDelivered(CargoBase box) 
     {
         if (Score.Instance != null)
         {
