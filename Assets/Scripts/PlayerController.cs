@@ -43,11 +43,10 @@ public class PlayerCarController : BaseCarController
         Steer();
         Move();
 
-        bool isReverseInputForAudio = isReverse || _verticalInput < -0.1f;
         float throttle = Mathf.Max(0f, _verticalInput);
 
         if (carAudio != null)
-            carAudio.UpdateCarAudio(throttle, _brakeInput, isReverseInputForAudio, _rb.linearVelocity.magnitude);
+            carAudio.UpdateCarAudio(throttle, _brakeInput, isReverse, _rb.linearVelocity.magnitude);
     }
 
     private void HandleGearShift()
