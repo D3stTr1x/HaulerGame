@@ -50,36 +50,32 @@ public class CarAudioController : MonoBehaviour
         brakeSource.volume = brakeVolume;
     }
 
-    public void UpdateCarAudio(float throttle, float brakeInput, bool reverseInput, float speed)
+    public void UpdateCarAudio(float throttle, float brakeInput, bool isReverseGear, float speed)
     {
         float absSpeed = Mathf.Abs(speed);
 
-        // Обновляем флаг заднего хода
-        if (reverseInput)
-            isReversing = true;
-        else if (!reverseInput && absSpeed < 2f)   // сбрасываем только когда почти остановились
-            isReversing = false;
-
-        bool actuallyReversing = isReversing && speed > 1.5f;
-
-        // Приоритеты
+        // Приоритеты звуков
         if (brakeInput > 0.2f && absSpeed > 2f)
         {
+            // Торможение (в приоритете, если скорость больше 2 км/ч)
             if (!wasBrakingLastFrame)
                 StartBraking(absSpeed);
 
             SetState(State.Braking);
         }
-        else if (actuallyReversing)
+        else if (isReverseGear && throttle > 0.05f)
         {
+            // Задний ход играет ТОЛЬКО когда включена R и нажат газ
             SetState(State.Reversing);
         }
         else if (throttle > 0.08f)
         {
+            // Обычный разгон вперед
             SetState(State.Accelerating);
         }
         else
         {
+            // Машина катится или стоит (холостой ход)
             SetState(State.Idle);
         }
 
