@@ -22,7 +22,7 @@ public class CarAudioController : MonoBehaviour
     public float reversePitch = 1.0f;
 
     [Header("Brake Settings")]
-    public float sharpBrakeMinSpeed = 10f;   // от какой скорости играть скрип
+    public float sharpBrakeMinSpeed = 20f;   // от какой скорости играть скрип
     public float sharpBrakeTime = 1.6f;
     public float normalBrakePitch = 0.78f;
 
