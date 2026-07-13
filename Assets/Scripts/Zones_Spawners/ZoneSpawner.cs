@@ -8,15 +8,35 @@ public class ZoneSpawner : MonoBehaviour
     //private GameObject[] deliveryZones;
     private List<DeliveryZone> deliveryZones = new List<DeliveryZone>();
     private bool activeZoneExists;
+    private NavigationSystem navigationSystem;
     public TruckCargoSystem truckCargoSystem;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
+
     void Start()
     {
+        // Находим навигатор на сцене, иначе он был равен null
+        navigationSystem = Object.FindFirstObjectByType<NavigationSystem>();
+
         FindZones();
         DeactivateAll();
         activeZoneExists = false;
         truckCargoSystem = GameObject.FindGameObjectWithTag("Player").GetComponent<TruckCargoSystem>();
+    }
+
+    public void DeactivateZone(GameObject zone)
+    {
+        if (deliveryZones.Contains(zone.GetComponent<DeliveryZone>()))
+        {
+            zone.SetActive(false);
+        }
+        activeZoneExists = false;
+
+        // Заставляем навигатор пересчитать цель сразу после отключения зоны
+        if (navigationSystem != null)
+        {
+            navigationSystem.FindNearestTarget();
+        }
     }
     void FindZones()
     {
@@ -36,6 +56,7 @@ public class ZoneSpawner : MonoBehaviour
         {
             zone.gameObject.SetActive(false);
         }
+        navigationSystem.FindNearestTarget();
         activeZoneExists = false;
     }
     //public void WaitAndDeactivateAll()
@@ -56,19 +77,12 @@ public class ZoneSpawner : MonoBehaviour
         {
             int idx = Random.Range(0, deliveryZones.Count);
             deliveryZones[idx].gameObject.SetActive(true);
+            navigationSystem.FindNearestTarget();
             activeZoneExists = true;
         }
         else return;
     }
 
-    public void DeactivateZone(GameObject zone)
-    {
-        if (deliveryZones.Contains(zone.GetComponent<DeliveryZone>()))
-        {
-            zone.SetActive(false);
-        }
-        activeZoneExists = false;
-    }
     // Update is called once per frame
     void Update()
     {
