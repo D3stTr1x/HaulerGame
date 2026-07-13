@@ -46,7 +46,16 @@ public class PlayerCarController : BaseCarController
         float throttle = Mathf.Max(0f, _verticalInput);
 
         if (carAudio != null)
-            carAudio.UpdateCarAudio(throttle, _brakeInput, isReverse, _rb.linearVelocity.magnitude);
+        {
+            // Передаем текущую скорость и лимит скорости включенной передачи
+            carAudio.UpdateCarAudio(
+                throttle,
+                _brakeInput,
+                IsReverse, // Используем публичное свойство, или поле isReverse
+                _rb.linearVelocity.magnitude,
+                CurrentMaxSpeedThisGear // <- Новая переменная
+            );
+        }
     }
 
     private void HandleGearShift()
