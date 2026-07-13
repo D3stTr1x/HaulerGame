@@ -382,6 +382,13 @@ public struct Wheel
     public WheelCollider WheelCollider;
     public bool IsForwardWheels;
 
+    public Wheel(Transform wheelMesh, WheelCollider wheelCollider, bool isForwardWheels)
+    {
+        WheelMesh = wheelMesh;
+        WheelCollider = wheelCollider;
+        IsForwardWheels = isForwardWheels;
+    }
+
     public void UpdateMeshPosition()
     {
         Vector3 position;
