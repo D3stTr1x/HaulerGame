@@ -5872,8 +5872,20 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 2181021549507043027, guid: 0af3777257b2caa48bac0c310dc2de1b, type: 3}
+      propertyPath: accelClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 28518379e9608fe4f95ec477f621b4f4, type: 3}
+    - target: {fileID: 2181021549507043027, guid: 0af3777257b2caa48bac0c310dc2de1b, type: 3}
+      propertyPath: crossfadeDuration
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2181021549507043027, guid: 0af3777257b2caa48bac0c310dc2de1b, type: 3}
       propertyPath: sharpBrakeMinSpeed
       value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 2181021549507043027, guid: 0af3777257b2caa48bac0c310dc2de1b, type: 3}
+      propertyPath: revLimiterThreshold
+      value: 0.96
       objectReference: {fileID: 0}
     - target: {fileID: 3353928983906885471, guid: 0af3777257b2caa48bac0c310dc2de1b, type: 3}
       propertyPath: m_Name

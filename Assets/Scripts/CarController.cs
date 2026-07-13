@@ -108,7 +108,7 @@ public class CarController : MonoBehaviour
         float throttle = Mathf.Max(0f, _verticalInput);           // газ только вперёд
         float brake = _brakeInput;                                // уже обработано в CheckInput
 
-        carAudio.UpdateCarAudio(throttle, brake, isReverseInput, _rb.linearVelocity.magnitude);
+        //carAudio.UpdateCarAudio(throttle, brake, isReverseInput, _rb.linearVelocity.magnitude);
     }
 
     private void FixedUpdate()
