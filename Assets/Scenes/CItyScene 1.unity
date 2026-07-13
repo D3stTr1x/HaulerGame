@@ -1219,11 +1219,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 587860325059126022, guid: 318f93a10efdff646aacef578a6e287d, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 1920
+      value: 2349.5
       objectReference: {fileID: 0}
     - target: {fileID: 587860325059126022, guid: 318f93a10efdff646aacef578a6e287d, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 986.30975
+      value: 1162
       objectReference: {fileID: 0}
     - target: {fileID: 587860325059126022, guid: 318f93a10efdff646aacef578a6e287d, type: 3}
       propertyPath: m_LocalScale.x
@@ -1267,11 +1267,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 587860325059126022, guid: 318f93a10efdff646aacef578a6e287d, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 784.5
+      value: 960
       objectReference: {fileID: 0}
     - target: {fileID: 587860325059126022, guid: 318f93a10efdff646aacef578a6e287d, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 403
+      value: 474.78
       objectReference: {fileID: 0}
     - target: {fileID: 587860325059126022, guid: 318f93a10efdff646aacef578a6e287d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -1285,6 +1285,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2413392858937653937, guid: 318f93a10efdff646aacef578a6e287d, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3179818694659806405, guid: 318f93a10efdff646aacef578a6e287d, type: 3}
       propertyPath: m_Name
       value: Canvas
@@ -1296,6 +1300,30 @@ PrefabInstance:
     - target: {fileID: 4246027473085856203, guid: 318f93a10efdff646aacef578a6e287d, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6426685099737586707, guid: 318f93a10efdff646aacef578a6e287d, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 828.9999
+      objectReference: {fileID: 0}
+    - target: {fileID: 6426685099737586707, guid: 318f93a10efdff646aacef578a6e287d, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -461.99997
+      objectReference: {fileID: 0}
+    - target: {fileID: 6721844005304112252, guid: 318f93a10efdff646aacef578a6e287d, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 919
+      objectReference: {fileID: 0}
+    - target: {fileID: 6721844005304112252, guid: 318f93a10efdff646aacef578a6e287d, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -392
+      objectReference: {fileID: 0}
+    - target: {fileID: 7106559585099023640, guid: 318f93a10efdff646aacef578a6e287d, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 913.9999
+      objectReference: {fileID: 0}
+    - target: {fileID: 7106559585099023640, guid: 318f93a10efdff646aacef578a6e287d, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -221.99997
       objectReference: {fileID: 0}
     - target: {fileID: 7268520775682615937, guid: 318f93a10efdff646aacef578a6e287d, type: 3}
       propertyPath: m_IsActive
@@ -1311,6 +1339,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7985705206911182905, guid: 318f93a10efdff646aacef578a6e287d, type: 3}
       propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8635878947391210023, guid: 318f93a10efdff646aacef578a6e287d, type: 3}
+      propertyPath: m_OverridePixelPerfect
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -1957,6 +1989,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3912731363708586961, guid: 90e1f5cb196725f42a28008b24b24f7c, type: 3}
+      propertyPath: accelClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 28518379e9608fe4f95ec477f621b4f4, type: 3}
     - target: {fileID: 7083515960299386327, guid: 90e1f5cb196725f42a28008b24b24f7c, type: 3}
       propertyPath: m_Name
       value: Player
