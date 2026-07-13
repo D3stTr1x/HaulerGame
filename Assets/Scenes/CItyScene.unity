@@ -1572,6 +1572,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4215534459945100019, guid: ed8fd06c252fbfe4aaee94e69489ff70, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8072619189581458004, guid: ed8fd06c252fbfe4aaee94e69489ff70, type: 3}
       propertyPath: m_Name
       value: ScreenCanvas
