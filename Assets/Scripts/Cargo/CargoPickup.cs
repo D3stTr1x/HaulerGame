@@ -28,6 +28,7 @@ public class CargoPickup : MonoBehaviour
     private Renderer[] renderers;
     private Rigidbody rb;
 
+    private static int lastPickupFrame = -1;
     private bool isPlayerNearby = false;
     private bool isHold = false;
     private float fallCheckTimer = 0f;
@@ -82,11 +83,17 @@ public class CargoPickup : MonoBehaviour
         }
     }
 
+
     private void Update()
     {
         if (isPlayerNearby && Input.GetKeyDown(pickupKey))
         {
-            TryPickup();
+            // Проверяем, чтобы в один кадр брался только один груз
+            if (lastPickupFrame != Time.frameCount)
+            {
+                lastPickupFrame = Time.frameCount;
+                TryPickup();
+            }
         }
 
         if (isPlayerNearby && !isHold)
@@ -160,12 +167,10 @@ public class CargoPickup : MonoBehaviour
 
         transform.SetParent(null);
 
-
-        // Запрашиваем идеальное свободное место с учетом размера именно этой коробки
+        // Запрашиваем идеальное свободное место
         Vector3 localGridOffset = truckSystem.GetDynamicCargoPosition(transform);
         Vector3 targetPos = holdPoint.TransformPoint(localGridOffset);
         Quaternion targetRot = holdPoint.rotation;
-
 
         Vector3 startPos = transform.position;
         Quaternion startRot = transform.rotation;
@@ -186,8 +191,11 @@ public class CargoPickup : MonoBehaviour
         transform.rotation = targetRot;
         transform.SetParent(holdPoint);
 
-        // Включаем физику обратно, чтобы груз "лег" в кузов и реагировал на тряску
+        // Включаем физику обратно
         if (rb != null) rb.isKinematic = false;
+
+        // ИСПРАВЛЕНИЕ: Применяем массу груза к грузовику только сейчас!
+        truckSystem.totalMassCargo += massCargo;
 
         isHold = true;
         currentCargoInTruck = transform;

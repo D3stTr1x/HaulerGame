@@ -30,18 +30,18 @@ public class TruckCargoSystem : MonoBehaviour
     public bool CanPickupCargo() => loadedCargos.Count < maxCargoCount;
     public Transform GetCargoHoldPoint() => cargoHoldPoint;
 
+
     public void LoadCargo(Transform cargo)
     {
         if (loadedCargos.Contains(cargo)) return;
         loadedCargos.Add(cargo);
 
-        //currentCargo = cargo;
-        //massCargo = cargoPickup.massCargo;
-       
-        //Debug.Log("Груз успешно загружен в кузов");
-
         CargoPickup pickup = cargo.GetComponent<CargoPickup>();
-        if (pickup != null) totalMassCargo += pickup.massCargo;
+
+        // ИСПРАВЛЕНИЕ: Убираем прибавление массы отсюда. 
+        // Масса будет добавлена только после того, как груз окажется в кузове.
+        // if (pickup != null) totalMassCargo += pickup.massCargo; 
+
         NavigationSystem nav = Object.FindAnyObjectByType<NavigationSystem>();
         if (nav != null) nav.SetDeliveryMode(true);
     }
