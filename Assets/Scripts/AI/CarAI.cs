@@ -34,6 +34,7 @@ public class CarAI : BaseCarController
         path = new NavMeshPath();
         //waypoints = GetDeliveryWaypoints();
         waypoints = GetWaypointsFromObject();
+        if (waypoints.Length != 0) Debug.Log("waypoints found");
         //if (waypoints.Length != 0)
         //    destination = waypoints[0];
         UpdatePath();
@@ -61,15 +62,17 @@ public class CarAI : BaseCarController
         int roadArea = NavMesh.GetAreaFromName("Road");
         int roadMask = 1 << roadArea;
         bool res = NavMesh.CalculatePath(transform.position, destination.position, NavMesh.AllAreas, path);
-        //if (res)
-        //    Debug.Log($"Path found, {path.corners.Length}");
-        //else Debug.Log("Path not found");
+        if (res)
+            Debug.Log($"Path found, {path.corners.Length}");
+        else Debug.Log("Path not found");
         curWaypoint = 0;
     }
     void FollowPath()   
     {
         if (path.corners.Length == 0) return;
         Vector3 target = GetNextPoint();
+        Debug.Log("Next point foound(AI)");
+        
         //Debug.Log($"got next point: {target}");
 
         Vector3 localTarget = transform.InverseTransformPoint(target);
@@ -112,6 +115,7 @@ public class CarAI : BaseCarController
         //brake = speedErr < -5f ? _brakeForce : 0f;
 
         SetInputs(throttle, steer, brake);
+        Debug.Log("Inputs set, following path");
         KindaSteer();
 
         //KindaMove();
@@ -140,19 +144,6 @@ public class CarAI : BaseCarController
         }
         return desSpeed;
     }
-    //void FindSmoothPath()
-    //{
-    //    if (path.status != NavMeshPathStatus.PathComplete)
-    //        return;
-    //    if (HasSharpTurns())
-    //    {
-    //        return;
-    //    }
-    //}
-    //bool HasSharpTurns()
-    //{
-    //    if (path.)
-    //}
     float GetMaxTurnAngle(int segments = 3)
     {
         if (path.corners.Length < 3) return 0f;
