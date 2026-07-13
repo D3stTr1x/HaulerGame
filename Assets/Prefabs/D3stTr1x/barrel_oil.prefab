@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &2546376342013528555
+--- !u!1 &1043024041171822397
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,123 +8,12 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1423057340111531651}
-  - component: {fileID: 7188856719843532059}
-  - component: {fileID: 6457400721412214328}
-  m_Layer: 0
-  m_Name: Trigger
-  m_TagString: PickUpTrigger
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1423057340111531651
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2546376342013528555}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0.511219, y: 0.48852342, z: 0.48852342, w: 0.511219}
-  m_LocalPosition: {x: -0.2676692, y: 0.24080276, z: -450.00012}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 6965800450703665894}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7188856719843532059
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2546376342013528555}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d1663230d9e594748bec992991661688, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CargoPickup
-  pickupDistance: 5
-  pickupKey: e
-  fallDetectionHeight: 1.5
-  fallCheckInterval: 0.5
-  pickupDuration: 1.2
-  HelpText: {fileID: 0}
-  pulseSpeed: 2
-  pulseIntensity: 0.3
-  massCargo: 0
-  onCargoPickedUp:
-    m_PersistentCalls:
-      m_Calls: []
-  isPickedUp: 0
---- !u!135 &6457400721412214328
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2546376342013528555}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 2000
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!1 &4289174019884366061
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4940373948420694408}
-  m_Layer: 0
-  m_Name: barrel_oil 1
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4940373948420694408
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4289174019884366061}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -205.1539, y: 1.06, z: 354.77615}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 6965800450703665894}
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &5157161744292048519
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 6965800450703665894}
-  - component: {fileID: 5256221983146353476}
-  - component: {fileID: 4426267339576437344}
-  - component: {fileID: 7942763019189277154}
-  - component: {fileID: 8236352705178934758}
-  - component: {fileID: 713005702875686903}
+  - component: {fileID: 8299166010746841102}
+  - component: {fileID: 5814839441415840845}
+  - component: {fileID: 8377336417145216584}
+  - component: {fileID: 6394688848614858550}
+  - component: {fileID: 8127730750034448450}
+  - component: {fileID: 5925245791684409465}
   m_Layer: 0
   m_Name: barrel_oil
   m_TagString: Untagged
@@ -132,37 +21,37 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &6965800450703665894
+--- !u!4 &8299166010746841102
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5157161744292048519}
+  m_GameObject: {fileID: 1043024041171822397}
   serializedVersion: 2
   m_LocalRotation: {x: -0.511219, y: -0.48852342, z: -0.48852342, w: 0.511219}
   m_LocalPosition: {x: -0.00022839356, y: 0.4500001, z: 0.0002783203}
   m_LocalScale: {x: 0.002, y: 0.002, z: 0.002}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1423057340111531651}
-  m_Father: {fileID: 4940373948420694408}
+  - {fileID: 4197606995594111891}
+  m_Father: {fileID: 3468655123819846548}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &5256221983146353476
+--- !u!33 &5814839441415840845
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5157161744292048519}
+  m_GameObject: {fileID: 1043024041171822397}
   m_Mesh: {fileID: 3626863843170127638, guid: 8fc828014a9a35a479a0957b7ae11a40, type: 3}
---- !u!23 &4426267339576437344
+--- !u!23 &8377336417145216584
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5157161744292048519}
+  m_GameObject: {fileID: 1043024041171822397}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -204,13 +93,13 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &7942763019189277154
+--- !u!64 &6394688848614858550
 MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5157161744292048519}
+  m_GameObject: {fileID: 1043024041171822397}
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -226,13 +115,13 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 3626863843170127638, guid: 8fc828014a9a35a479a0957b7ae11a40, type: 3}
---- !u!114 &8236352705178934758
+--- !u!114 &8127730750034448450
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5157161744292048519}
+  m_GameObject: {fileID: 1043024041171822397}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d1663230d9e594748bec992991661688, type: 3}
@@ -251,13 +140,13 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   isPickedUp: 0
---- !u!54 &713005702875686903
+--- !u!54 &5925245791684409465
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5157161744292048519}
+  m_GameObject: {fileID: 1043024041171822397}
   serializedVersion: 5
   m_Mass: 1
   m_LinearDamping: 0
@@ -278,3 +167,114 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!1 &3298472240510678530
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3468655123819846548}
+  m_Layer: 0
+  m_Name: barrel_oil
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3468655123819846548
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3298472240510678530}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -205.1539, y: 1.06, z: 354.77615}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 8299166010746841102}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &5790806805242240722
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4197606995594111891}
+  - component: {fileID: 3445755805557327296}
+  - component: {fileID: 3002520480680978093}
+  m_Layer: 0
+  m_Name: Trigger
+  m_TagString: PickUpTrigger
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4197606995594111891
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5790806805242240722}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.511219, y: 0.48852342, z: 0.48852342, w: 0.511219}
+  m_LocalPosition: {x: -0.2676692, y: 0.24080276, z: -450.00012}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8299166010746841102}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3445755805557327296
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5790806805242240722}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1663230d9e594748bec992991661688, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CargoPickup
+  pickupDistance: 5
+  pickupKey: e
+  fallDetectionHeight: 1.5
+  fallCheckInterval: 0.5
+  pickupDuration: 1.2
+  HelpText: {fileID: 0}
+  pulseSpeed: 2
+  pulseIntensity: 0.3
+  massCargo: 0
+  onCargoPickedUp:
+    m_PersistentCalls:
+      m_Calls: []
+  isPickedUp: 0
+--- !u!135 &3002520480680978093
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5790806805242240722}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 2000
+  m_Center: {x: 0, y: 0, z: 0}

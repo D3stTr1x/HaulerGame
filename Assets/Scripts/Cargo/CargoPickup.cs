@@ -33,10 +33,8 @@ public class CargoPickup : MonoBehaviour
     private bool isHold = false;
     private float fallCheckTimer = 0f;
 
-    // Убрали static, так как грузов теперь может быть много
     private Transform currentCargoInTruck = null;
-
-    public UnityEvent onCargoPickedUp; //events (for ZoneSpawner)
+    public UnityEvent onCargoPickedUp;
     public bool isPickedUp;
 
     public bool IsPickedUp
@@ -83,21 +81,27 @@ public class CargoPickup : MonoBehaviour
         }
     }
 
+    // ИСПРАВЛЕНИЕ 1: Теперь мы считаем каждую деталь грузовика в зоне, чтобы просадка подвески не ломала триггер
+    private HashSet<Collider> playersInZone = new HashSet<Collider>();
+
+    // ... (Свойства и методы Awake / Start остаются без изменений)
 
     private void Update()
     {
-        if (isPlayerNearby && Input.GetKeyDown(pickupKey))
+        if (isPlayerNearby && !isHold)
         {
-            // Проверяем, чтобы в один кадр брался только один груз
-            if (lastPickupFrame != Time.frameCount)
+            if (Input.GetKeyDown(pickupKey))
             {
-                lastPickupFrame = Time.frameCount;
                 TryPickup();
             }
-        }
 
-        if (isPlayerNearby && !isHold)
             PulseEffect();
+
+            if (HelpText != null && !HelpText.gameObject.activeSelf)
+            {
+                ShowPickupPrompt(true);
+            }
+        }
 
         if (isHold)
         {
@@ -112,12 +116,15 @@ public class CargoPickup : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player") && !isHold)
+        if (other.CompareTag("Player"))
         {
+            playersInZone.Add(other); // Запоминаем коллайдер, который вошел
             isPlayerNearby = true;
-            ShowPickupPrompt(true);
+
             if (truckSystem == null)
                 truckSystem = other.GetComponentInParent<TruckCargoSystem>();
+
+            if (!isHold) ShowPickupPrompt(true);
         }
     }
 
@@ -125,15 +132,27 @@ public class CargoPickup : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            isPlayerNearby = false;
-            ShowPickupPrompt(false);
-            ResetHighlight();
-            if (HelpText != null) HelpText.gameObject.SetActive(false);
+            playersInZone.Remove(other); // Удаляем только тот коллайдер, который вышел
+
+            // Защита: удаляем пустышки, если какая-то деталь машины была уничтожена/отключена
+            playersInZone.RemoveWhere(col => col == null || !col.gameObject.activeInHierarchy);
+
+            // Игрок "ушел" только если ВСЕ коллайдеры покинули зону
+            if (playersInZone.Count == 0)
+            {
+                isPlayerNearby = false;
+                if (!isHold) ShowPickupPrompt(false);
+                ResetHighlight();
+            }
         }
     }
 
     private void TryPickup()
     {
+        // ИСПРАВЛЕНИЕ 2: Защита от кражи ввода перенесена сюда. 
+        // Если кто-то в этом кадре УЖЕ начал подбор, остальные отменяются.
+        if (lastPickupFrame == Time.frameCount) return;
+
         if (truckSystem == null) return;
 
         if (!truckSystem.CanPickupCargo())
@@ -144,13 +163,57 @@ public class CargoPickup : MonoBehaviour
 
         if (isHold) return;
 
+        // Блокируем остальные грузы ТОЛЬКО когда точно уверены, что берем этот
+        lastPickupFrame = Time.frameCount;
+
         ShowPickupPrompt(false);
         ResetHighlight();
 
-        // Сначала регистрируем груз, чтобы занять место
         truckSystem.LoadCargo(transform);
         StartCoroutine(MoveToCargoHold());
         IsPickedUp = true;
+    }
+
+    private System.Collections.IEnumerator HideHelpTextAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        // ИСПРАВЛЕНИЕ: После того как надпись "Груз выпал" исчезнет,
+        // проверяем, стоим ли мы всё ещё рядом. Если да — возвращаем подсказку о подборе.
+        if (isPlayerNearby && !isHold)
+        {
+            ShowPickupPrompt(true);
+        }
+        else if (HelpText != null)
+        {
+            HelpText.gameObject.SetActive(false);
+        }
+    }
+
+
+    private void CheckIfFallen()
+    {
+        Transform holdPoint = truckSystem.GetCargoHoldPoint();
+        if (holdPoint == null || !isHold) return;
+
+        Vector3 cargoPos = transform.position;
+        Vector3 holdPos = holdPoint.position;
+
+        float maxDistanceX = 3.5f;
+
+        // ИСПРАВЛЕНИЕ 3: Было 1.3f. Но половина длины кузова = 1.8f.
+        // Ставим 3.5f, чтобы грузы на краях кузова не считались выпавшими!
+        float maxDistanceZ = 3.5f;
+
+        float maxDropY = 0.5f;
+
+        float distX = Mathf.Abs(cargoPos.x - holdPos.x);
+        float distZ = Mathf.Abs(cargoPos.z - holdPos.z);
+
+        if (distX > maxDistanceX || distZ > maxDistanceZ || cargoPos.y < holdPos.y - maxDropY)
+        {
+            OnCargoFallen();
+        }
     }
 
 
@@ -220,27 +283,6 @@ public class CargoPickup : MonoBehaviour
         if (HelpText != null) HelpText.gameObject.SetActive(false);
     }
 
-    private void CheckIfFallen()
-    {
-        Transform holdPoint = truckSystem.GetCargoHoldPoint();
-        if (holdPoint == null || !isHold) return;
-
-        Vector3 cargoPos = transform.position;
-        Vector3 holdPos = holdPoint.position;
-
-        float maxDistanceX = 3.5f;
-        float maxDistanceZ = 1.3f;
-        float maxDropY = 0.5f;
-
-        float distX = Mathf.Abs(cargoPos.x - holdPos.x);
-        float distZ = Mathf.Abs(cargoPos.z - holdPos.z);
-
-        if (distX > maxDistanceX || distZ > maxDistanceZ || cargoPos.y < holdPos.y - maxDropY)
-        {
-            OnCargoFallen();
-        }
-    }
-
     private void OnCargoFallen()
     {
         isHold = false;
@@ -260,12 +302,6 @@ public class CargoPickup : MonoBehaviour
             HelpText.text = "Груз выпал из кузова!";
             StartCoroutine(HideHelpTextAfterDelay(3f));
         }
-    }
-
-    private System.Collections.IEnumerator HideHelpTextAfterDelay(float delay)
-    {
-        yield return new WaitForSeconds(delay);
-        if (HelpText != null) HelpText.gameObject.SetActive(false);
     }
 
     private void PulseEffect()
