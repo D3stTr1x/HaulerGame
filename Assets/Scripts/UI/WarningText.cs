@@ -2,7 +2,7 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 
-public class TaskText : MonoBehaviour
+public class WarningText : MonoBehaviour
 {
     public TextMeshProUGUI taskText;
     public bool isCargoPicked;

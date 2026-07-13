@@ -5,37 +5,20 @@ using UnityEngine.Events;
 using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.UI;
 
-public class Cargo : MonoBehaviour
+public class CargoBase : MonoBehaviour
 {
     //healthbar govna ne rabotaet
     //public UnityEvent onPackagePickedUp;
     public UnityEvent onCargoDelivered;
     public int pts;
 
-    private float health;
-    private float maxHealth = 100f;
+    public float health;
+    //protected float maxHealth;
 
-    private int penalty;
+    protected int penalty;
 
     //private bool isPickedUp = false;
     private bool isDelivered = false;
-
-    //public bool IsPickedUp
-    //{
-    //    get => isPickedUp; 
-    //    set 
-    //    {
-    //        if (isPickedUp != value)
-    //        {
-    //            isPickedUp = value;
-    //            if (isPickedUp)
-    //            {
-    //                onPackagePickedUp?.Invoke();
-    //                Debug.Log($"Package picked up, event fired");
-    //            }
-    //        }
-    //    }
-    //}
     public bool IsDelivered
     {
         get => isDelivered;
@@ -57,23 +40,11 @@ public class Cargo : MonoBehaviour
     private void Awake()
     {
         //adding event listeners
-        TaskText taskText = GameObject.FindFirstObjectByType<TaskText>();
-        if (taskText != null )
+        WarningText taskText = GameObject.FindFirstObjectByType<WarningText>();
+        if (taskText != null)
         {
             onCargoDelivered.AddListener(taskText.PickupMessage);
         }
-        //ZoneSpawner zoneSpawner = GameObject.FindFirstObjectByType<ZoneSpawner>();
-        //if (zoneSpawner != null)
-        //{
-        //    //onCargoDelivered.AddListener(zoneSpawner.DeactivateAll);
-        //    Debug.Log("Delayed deactivation started");
-        //    onCargoDelivered.AddListener(zoneSpawner.DeactivateIfDeliveredAll);
-        //}
-        //LoadedCargoHandler loadedCargoHandler = GameObject.FindFirstObjectByType<LoadedCargoHandler>();
-        //if (loadedCargoHandler != null)
-        //{
-        //    onCargoDelivered.AddListener(loadedCargoHandler.DeactivateZones);
-        //}
         MinimapMarkers minimapMarkers = GameObject.FindFirstObjectByType<MinimapMarkers>();
         if (minimapMarkers != null)
         {
@@ -85,11 +56,11 @@ public class Cargo : MonoBehaviour
             onCargoDelivered.AddListener(score.UpdateCargosDelivered);
         }
     }
-    void Start()
+    protected void Init()
     {
-        penalty = -((int) maxHealth / 4);
-        health = maxHealth;
-        pts = (int)maxHealth / 2;
+        penalty = -((int)health / 4);
+        //health = maxHealth;
+        pts = (int)health / 2;
     }
     void TakeDamage(float dmg)
     {
@@ -109,7 +80,7 @@ public class Cargo : MonoBehaviour
         if (IsDelivered) return;
 
         float dmg = collision.relativeVelocity.magnitude;
-        if (dmg > 3)
+        if (dmg > 5)
             TakeDamage(dmg);
     }
     void Die()

@@ -4,9 +4,12 @@ using UnityEngine;
 
 public class Timer : MonoBehaviour
 {
+    public event Action onSecPassed;
     public TextMeshProUGUI timeText;
     public static Timer Instance;
+    public CargoSpawner cargoSpawner;
     private int time;
+    private int secPassed;
     private void Awake()
     {
         if (Instance == null)
@@ -16,9 +19,17 @@ public class Timer : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        cargoSpawner = GameObject.FindFirstObjectByType<CargoSpawner>();
+        onSecPassed += cargoSpawner.SpawnRandomInActive;
+
         time = 120;
+        secPassed = 0;
         UpdateTimer();
     }
+    //public void Passed()
+    //{
+
+    //}
     void UpdateTimer()
     {
         InvokeRepeating("UpdateTimeDisplay", 0, 1);
@@ -35,14 +46,19 @@ public class Timer : MonoBehaviour
     {
         if (time > 0)
         {
-            time--;
+            time--; secPassed++;
             TimeSpan timeSpan = TimeSpan.FromSeconds(time);
             timeText.text = timeSpan.ToString(@"mm\:ss");
         }
         else
         {
-            TaskText taskText = GameObject.FindFirstObjectByType<TaskText>();
+            WarningText taskText = GameObject.FindFirstObjectByType<WarningText>();
             taskText.TimesUpMessage();
+        }
+        if (time > 0 && secPassed > 0 && secPassed % 3 == 0)
+        {
+            onSecPassed?.Invoke();
+            //Debug.Log("Sec passed, cargo spawn event fired");
         }
     }
 

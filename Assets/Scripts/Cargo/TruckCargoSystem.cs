@@ -42,6 +42,8 @@ public class TruckCargoSystem : MonoBehaviour
 
         CargoPickup pickup = cargo.GetComponent<CargoPickup>();
         if (pickup != null) totalMassCargo += pickup.massCargo;
+        NavigationSystem nav = Object.FindAnyObjectByType<NavigationSystem>();
+        if (nav != null) nav.SetDeliveryMode(true);
     }
 
     public void UnloadCargo(Transform cargo)

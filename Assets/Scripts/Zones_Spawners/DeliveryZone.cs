@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class DeliveryZone : MonoBehaviour
 {
-    private int pts = 30; //change later
+    //private int pts = 30; //change later
     private LoadedCargoHandler loadedCargoHandler;
     private ZoneSpawner zoneSpawner;
     private int numCargos;
@@ -19,7 +19,7 @@ public class DeliveryZone : MonoBehaviour
             }
             Debug.Log($"Player entered trigger, numCargos: {numCargos}");
         }
-        Cargo box = other.GetComponent<Cargo>();
+        CargoBase box = other.GetComponent<CargoBase>();
         if (box)
         {
             MarkDelivered(box);
@@ -33,6 +33,9 @@ public class DeliveryZone : MonoBehaviour
             DeactivateZone();
             if (!gameObject.activeInHierarchy)
                 loadedCargoHandler.ClearAllCargo();
+
+            NavigationSystem nav = Object.FindAnyObjectByType<NavigationSystem>();
+            if (nav != null) nav.SetDeliveryMode(false);
         }
         
     }
@@ -45,7 +48,7 @@ public class DeliveryZone : MonoBehaviour
             numDelivered = 0;
         }
     }
-    void MarkDelivered(Cargo box) 
+    void MarkDelivered(CargoBase box) 
     {
         if (Score.Instance != null)
         {

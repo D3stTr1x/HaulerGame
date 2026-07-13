@@ -9,6 +9,8 @@ TagManager:
   - DeliveryZone
   - ZoneSpawner
   - MinimapCamera
+  - PickUpTrigger
+  - CargoSpawnZone
   layers:
   - Default
   - TransparentFX
@@ -20,7 +22,7 @@ TagManager:
   - Minimap Object
   - Minimap Surface
   - TriggerZone
-  - 
+  - Road
   - 
   - 
   - 
