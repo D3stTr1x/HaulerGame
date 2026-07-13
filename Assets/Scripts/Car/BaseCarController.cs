@@ -213,8 +213,10 @@ public class BaseCarController : MonoBehaviour
         {
             float brakeMultiplier = wheel.IsForwardWheels ? 0.72f : 0.28f;
             wheel.WheelCollider.brakeTorque = _brakeForce * _brakeInput * brakeMultiplier;
+            if (wheel.WheelCollider.brakeTorque > 0f)
+                Debug.Log($"applying brakes: {wheel.WheelCollider.brakeTorque}");
         }
-        //Debug.Log("applying brakes");
+        
     }
 
     protected void Steer()
@@ -278,18 +280,6 @@ public class BaseCarController : MonoBehaviour
     {
         Transform tireParent = transform.Find("Tire");
         Transform colliderParent = transform.Find("Collider");
-        //if (tireParent != null)
-        //{
-        //    GameObject[] wheels = new GameObject[tireParent.childCount];
-        //    for (int i = 0; i < tireParent.childCount; i++)
-        //    {
-        //        wheels[i] = tireParent.GetChild(i).gameObject;
-        //    }
-        //}
-        //if (colliderParent != null)
-        //{
-        //    WheelCollider[] wheelColliders = colliderParent.GetComponentsInChildren<WheelCollider>();
-        //}
         Wheel[] wheels = {
             new Wheel(tireParent.Find("Pick Up_7 BL Tire"), colliderParent.Find("WheelCollider_BL").GetComponent<WheelCollider>(), false),
             new Wheel(tireParent.Find("Pick Up_7 BR Tire"), colliderParent.Find("WheelCollider_BR").GetComponent<WheelCollider>(), false),

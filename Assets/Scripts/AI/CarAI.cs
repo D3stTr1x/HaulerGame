@@ -6,12 +6,12 @@ using UnityEngine.AI;
 
 public class CarAI : BaseCarController
 {
+    public Transform waypointsObject;
     public Transform[] waypoints;
     public float waitTime = 0f;
     public bool randomPatrol = false;
 
     private NavMeshPath path;
-    private List<Vector3> smoothPath = new List<Vector3>();
     public Transform destination;
     //private NavMeshAgent agent;
     private float lookahead = 5f;
@@ -23,20 +23,20 @@ public class CarAI : BaseCarController
     private float pathUpdInterval = 0.5f;
 
     //replace with controller references
-    private float maxSteer = 42f;
-    private float maxTurn = 90f;
-    private float lookAheadSeg = 3f;
+    private float maxSteer = 60f;
+    //private float maxTurn = 90f;
+    //private float lookAheadSeg = 3f;
     protected override void Start()
     {
         base.Start();
-        //_maxSpeedForvard = 30;
+        _maxSpeedForvard = 60f;
         FindWheels();
         path = new NavMeshPath();
-        waypoints = GetDeliveryWaypoints();
-        if (waypoints.Length != 0)
-            destination = waypoints[0];
+        //waypoints = GetDeliveryWaypoints();
+        waypoints = GetWaypointsFromObject();
+        //if (waypoints.Length != 0)
+        //    destination = waypoints[0];
         UpdatePath();
-        //Debug.Log();
     }
 
     // Update is called once per frame
@@ -53,7 +53,7 @@ public class CarAI : BaseCarController
 
     void UpdatePath()
     {
-        if (waypoints == null) waypoints = GetDeliveryWaypoints();
+        //if (waypoints == null) waypoints = GetDeliveryWaypoints();
         if (waypoints.Length >= 0)
         {
             destination = waypoints[curWaypointGlobal];
@@ -75,18 +75,38 @@ public class CarAI : BaseCarController
         Vector3 localTarget = transform.InverseTransformPoint(target);
         float steer = Mathf.Clamp(localTarget.x, -maxSteer, maxSteer);
         float desSpeed = CalcSpeed();
+        //float desSpeed = _maxSpeedForvard;
+        //float steer = GetMaxTurnAngle();
+
+        //if (Mathf.Abs(steer) > 40f)
+        //{
+        //    desSpeed *= 0.1f;
+        //}
+        //else if (Mathf.Abs(steer) > 20f)
+        //{
+        //    desSpeed *= 0.2f;
+        //}
+        //else if (Mathf.Abs(steer) > 10f)
+        //{
+        //    desSpeed *= 0.5f;
+        //}
+        //else if (Mathf.Abs(steer) > 5f)
+        //{
+        //    desSpeed *= 0.9f;
+        //}
 
         float speedErr = desSpeed - _speed;
         float throttle, brake;
         if (speedErr > 0)
         {
-            throttle = Mathf.Clamp(speedErr * 0.5f, 0f, 1f);
+            throttle = Mathf.Clamp(speedErr, 0f, 1f);
             brake = 0f;
         }
         else
         {
             throttle = 0f;
-            brake = speedErr < -5f ? _brakeForce : 0f;
+            //brake = speedErr < -5f ? _brakeForce : 0f;
+            brake = _brakeForce;
         }
 
         //brake = speedErr < -5f ? _brakeForce : 0f;
@@ -116,7 +136,7 @@ public class CarAI : BaseCarController
         }
         else if (Mathf.Abs(steer) > 5f)
         {
-            desSpeed *= 0.7f;
+            desSpeed *= 0.9f;
         }
         return desSpeed;
     }
@@ -157,7 +177,6 @@ public class CarAI : BaseCarController
     {
         Vector3 pos = transform.position;
         float distChecked = 0f;
-
         for (int i = curWaypoint; i < path.corners.Length; i++)
         {
             //distance check
@@ -169,14 +188,17 @@ public class CarAI : BaseCarController
                 return path.corners[i];
             }
             pos = path.corners[i];
-            
         }
         //
-        curWaypoint = path.corners.Length - 1;
-        MoveToNextPointGlobal();
-        UpdatePath();
-        //return path.corners[path.corners.Length - 1];
-        return GetNextPoint();
+        if (path.corners.Length != 0)
+        {
+            curWaypoint = path.corners.Length - 1;
+            MoveToNextPointGlobal();
+            UpdatePath();
+            return path.corners[path.corners.Length - 1];
+        }
+        return pos;
+        //return GetNextPoint();
     }
     new private void FindWheels()
     {
@@ -214,5 +236,24 @@ public class CarAI : BaseCarController
         }
         curWaypointGlobal = (curWaypointGlobal + 1) % waypoints.Length;
         Debug.Log("Moving to next global point");
+    }
+    Transform[] GetWaypointsFromObject()
+    {
+        if (waypointsObject != null)
+        {
+            Transform[] way = waypointsObject.GetComponentsInChildren<Transform>();
+            Transform[] ways = new Transform[way.Length-1];
+            int idx = 0;
+            for (int i = 0; i < way.Length; i++)
+            {
+                if (way[i].gameObject != waypointsObject.gameObject)
+                {
+                    ways[idx] = way[i];
+                    idx++;
+                }
+            }
+            return ways;
+        }
+        return null;
     }
 }
