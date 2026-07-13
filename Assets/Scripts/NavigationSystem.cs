@@ -90,14 +90,25 @@ public class NavigationSystem : MonoBehaviour
     {
         if (_currentTarget != null)
         {
-            Vector3 groundDestination = new Vector3(_currentTarget.position.x, player.position.y, _currentTarget.position.z);
             NavMeshQueryFilter filter = new NavMeshQueryFilter();
             filter.areaMask = NavMesh.AllAreas;
 
-            // Оставляю твой индекс 1 для "Car"
+            // Твой индекс 1 для агента "Car"
             filter.agentTypeID = NavMesh.GetSettingsByIndex(1).agentTypeID;
 
-            NavMesh.CalculatePath(player.position, groundDestination, filter, _path);
+            // --- НАДЕЖНЫЙ СПОСОБ ПОИСКА ТОЧКИ ---
+            NavMeshHit hit;
+            // Ищем легальную точку на NavMesh в радиусе 10 метров от нашего спавнера
+            if (NavMesh.SamplePosition(_currentTarget.position, out hit, 100.0f, filter))
+            {
+                // Если нашли - строим путь до неё (hit.position - это идеальные координаты на сетке)
+                NavMesh.CalculatePath(player.position, hit.position, filter, _path);
+            }
+            else
+            {
+                // Дебаг, если спавнер вообще висит в космосе далеко от дорог
+                Debug.LogWarning("Точка " + _currentTarget.name + " находится слишком далеко от NavMesh! Увеличьте радиус поиска или подвиньте спавнер ближе к дороге.");
+            }
         }
     }
 
