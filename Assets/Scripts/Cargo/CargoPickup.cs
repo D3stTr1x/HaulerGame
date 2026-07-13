@@ -28,6 +28,7 @@ public class CargoPickup : MonoBehaviour
     private Renderer[] renderers;
     private Rigidbody rb;
 
+    private static int lastPickupFrame = -1;
     private bool isPlayerNearby = false;
     private bool isHold = false;
     private float fallCheckTimer = 0f;
@@ -82,11 +83,17 @@ public class CargoPickup : MonoBehaviour
         }
     }
 
+
     private void Update()
     {
         if (isPlayerNearby && Input.GetKeyDown(pickupKey))
         {
-            TryPickup();
+            // Проверяем, чтобы в один кадр брался только один груз
+            if (lastPickupFrame != Time.frameCount)
+            {
+                lastPickupFrame = Time.frameCount;
+                TryPickup();
+            }
         }
 
         if (isPlayerNearby && !isHold)
@@ -146,6 +153,7 @@ public class CargoPickup : MonoBehaviour
         IsPickedUp = true;
     }
 
+
     private System.Collections.IEnumerator MoveToCargoHold()
     {
         Transform holdPoint = truckSystem.GetCargoHoldPoint();
@@ -155,17 +163,19 @@ public class CargoPickup : MonoBehaviour
         {
             rb.linearVelocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
-            rb.isKinematic = true; // Отключаем гравитацию на время полета
+            rb.isKinematic = true;
+
+            // ИСПРАВЛЕНИЕ 1: Отключаем физические столкновения на время полета!
+            // Теперь ящик - "призрак" и не сможет прогнуть машину своим коллайдером.
+            rb.detectCollisions = false;
         }
 
         transform.SetParent(null);
 
-
-        // Запрашиваем идеальное свободное место с учетом размера именно этой коробки
+        // Запрашиваем идеальное свободное место
         Vector3 localGridOffset = truckSystem.GetDynamicCargoPosition(transform);
         Vector3 targetPos = holdPoint.TransformPoint(localGridOffset);
         Quaternion targetRot = holdPoint.rotation;
-
 
         Vector3 startPos = transform.position;
         Quaternion startRot = transform.rotation;
@@ -178,6 +188,14 @@ public class CargoPickup : MonoBehaviour
             elapsed += Time.deltaTime;
             float t = elapsed / pickupDuration;
 
+            // ИСПРАВЛЕНИЕ 2: Двигаем ящик по красивой дуге
+            Vector3 currentPos = Vector3.Lerp(startPos, targetPos, t);
+            // Добавляем высоту (прыжок), чтобы груз перелетал через борт
+            currentPos.y += Mathf.Sin(t * Mathf.PI) * 1.5f;
+
+            transform.position = currentPos;
+            transform.rotation = Quaternion.Slerp(startRot, targetRot, t);
+
             yield return null; // Ждем следующий кадр
         }
 
@@ -186,8 +204,16 @@ public class CargoPickup : MonoBehaviour
         transform.rotation = targetRot;
         transform.SetParent(holdPoint);
 
-        // Включаем физику обратно, чтобы груз "лег" в кузов и реагировал на тряску
-        if (rb != null) rb.isKinematic = false;
+        // Включаем физику обратно
+        if (rb != null)
+        {
+            rb.isKinematic = false;
+            // ИСПРАВЛЕНИЕ 3: Возвращаем столкновения, когда груз уже в кузове
+            rb.detectCollisions = true;
+        }
+
+        // Применяем массу груза к грузовику
+        truckSystem.totalMassCargo += massCargo;
 
         isHold = true;
         currentCargoInTruck = transform;

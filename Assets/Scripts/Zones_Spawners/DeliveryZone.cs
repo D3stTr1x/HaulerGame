@@ -33,6 +33,9 @@ public class DeliveryZone : MonoBehaviour
             DeactivateZone();
             if (!gameObject.activeInHierarchy)
                 loadedCargoHandler.ClearAllCargo();
+
+            NavigationSystem nav = Object.FindAnyObjectByType<NavigationSystem>();
+            if (nav != null) nav.SetDeliveryMode(false);
         }
         
     }

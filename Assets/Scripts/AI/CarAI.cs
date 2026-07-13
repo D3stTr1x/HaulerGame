@@ -74,26 +74,26 @@ public class CarAI : BaseCarController
 
         Vector3 localTarget = transform.InverseTransformPoint(target);
         float steer = Mathf.Clamp(localTarget.x, -maxSteer, maxSteer);
-        float desSpeed = CalcSpeed();
-        //float desSpeed = _maxSpeedForvard;
+        //float desSpeed = CalcSpeed();
+        float desSpeed = _maxSpeedForvard;
         //float steer = GetMaxTurnAngle();
 
-        //if (Mathf.Abs(steer) > 40f)
-        //{
-        //    desSpeed *= 0.1f;
-        //}
-        //else if (Mathf.Abs(steer) > 20f)
-        //{
-        //    desSpeed *= 0.2f;
-        //}
-        //else if (Mathf.Abs(steer) > 10f)
-        //{
-        //    desSpeed *= 0.5f;
-        //}
-        //else if (Mathf.Abs(steer) > 5f)
-        //{
-        //    desSpeed *= 0.9f;
-        //}
+        if (Mathf.Abs(steer) > 40f)
+        {
+            desSpeed *= 0.1f;
+        }
+        else if (Mathf.Abs(steer) > 20f)
+        {
+            desSpeed *= 0.2f;
+        }
+        else if (Mathf.Abs(steer) > 10f)
+        {
+            desSpeed *= 0.5f;
+        }
+        else if (Mathf.Abs(steer) > 5f)
+        {
+            desSpeed *= 0.9f;
+        }
 
         float speedErr = desSpeed - _speed;
         float throttle, brake;
