@@ -53,7 +53,7 @@ public class CarAudioController : MonoBehaviour
     private float brakeTimer = 0f;
     private bool wasBrakingLastFrame = false;
     private float currentMaxGearSpeed = 50f;
-
+     
     private void Awake()
     {
         // Настраиваем первый источник (основной)
