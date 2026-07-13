@@ -27,7 +27,10 @@ public class NavigationSystem : MonoBehaviour
 
     void Start()
     {
+        player = GameObject.FindGameObjectWithTag("Player").transform;
         _path = new NavMeshPath();
+        //GetDeliveryPoints();
+        //GetCargoSpawnZones();
         FindNearestTarget();
     }
 
@@ -54,6 +57,14 @@ public class NavigationSystem : MonoBehaviour
 
     public void FindNearestTarget()
     {
+        if (isDelivering)
+        {
+            GetDeliveryPoints();
+        }
+        else
+        {
+            GetCargoSpawnZones();
+        }
         // Выбираем активный массив в зависимости от того, едем мы с грузом или пустые
         Transform[] currentPoints = isDelivering ? deliveryPoints : pickupPoints;
 
@@ -84,6 +95,7 @@ public class NavigationSystem : MonoBehaviour
         }
 
         _currentTarget = nearestPoint;
+        //Debug.Log("Nearest point for arrow found");
     }
 
     private void CalculateRoute()
@@ -102,7 +114,8 @@ public class NavigationSystem : MonoBehaviour
             if (NavMesh.SamplePosition(_currentTarget.position, out hit, 100.0f, filter))
             {
                 // Если нашли - строим путь до неё (hit.position - это идеальные координаты на сетке)
-                NavMesh.CalculatePath(player.position, hit.position, filter, _path);
+                bool res = NavMesh.CalculatePath(player.position, hit.position, filter, _path);
+                //if (res) Debug.Log($"path to nearest point isDelivering = {isDelivering} calculated (arrow nav)");
             }
             else
             {
@@ -111,11 +124,29 @@ public class NavigationSystem : MonoBehaviour
             }
         }
     }
-
+    void GetDeliveryPoints()
+    {
+        ZoneSpawner zoneSpawner = FindFirstObjectByType<ZoneSpawner>();
+        zoneSpawner.GetDeliveryZones(out deliveryPoints);
+        if (deliveryPoints != null) Debug.Log($"delPoints: {deliveryPoints.Length} (arrow nav)");
+    }
+    void GetCargoSpawnZones()
+    {
+        CargoSpawner zoneSpawner = FindFirstObjectByType<CargoSpawner>();
+        zoneSpawner.GetActiveCargoZones(out pickupPoints);
+        if (pickupPoints != null) Debug.Log($"pickPoints: {pickupPoints.Length} (arrow nav)");
+    }
     private void UpdateArrowDirection()
     {
-        if (_path.status != NavMeshPathStatus.PathComplete || _path.corners.Length < 2)
+        //if (_path.status != NavMeshPathStatus.PathComplete || _path.corners.Length < 2) // !=
+        //{
+        //    Debug.Log("if entered");
+        //    uiArrow.gameObject.SetActive(false);
+        //    return;
+        //}
+        if (_path == null || _path.corners.Length == 0)
         {
+            //Debug.Log("if entered");
             uiArrow.gameObject.SetActive(false);
             return;
         }

@@ -42,7 +42,7 @@ public class TruckCargoSystem : MonoBehaviour
         // Масса будет добавлена только после того, как груз окажется в кузове.
         // if (pickup != null) totalMassCargo += pickup.massCargo; 
 
-        NavigationSystem nav = Object.FindAnyObjectByType<NavigationSystem>();
+        NavigationSystem nav = Object.FindFirstObjectByType<NavigationSystem>();
         if (nav != null) nav.SetDeliveryMode(true);
     }
 

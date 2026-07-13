@@ -37,6 +37,7 @@ public class CargoSpawnZone : MonoBehaviour
 
         GameObject.Instantiate(cargo, pos);
     }
+
     // Update is called once per frame
     void Update()
     {

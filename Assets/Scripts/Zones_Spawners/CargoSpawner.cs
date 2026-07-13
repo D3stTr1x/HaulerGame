@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class CargoSpawner : MonoBehaviour
 {
-    private List<CargoSpawnZone> cargoZones = new List<CargoSpawnZone>();
-    private List<CargoSpawnZone> activeZones = new List<CargoSpawnZone>();
+    public List<CargoSpawnZone> cargoZones = new List<CargoSpawnZone>();
+    public List<CargoSpawnZone> activeZones = new List<CargoSpawnZone>();
     public GameObject smallPrefab;
     public GameObject bigPrefab;
     public GameObject longPrefab;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    void Awake()
     {
         FindZones();
         //DeactivateAll();
@@ -80,6 +80,34 @@ public class CargoSpawner : MonoBehaviour
             if (zone.gameObject.activeInHierarchy)
                 activeZones.Add(zone);
         }
+    }
+    public void GetCargoZones(out Transform[] res)
+    {
+        Transform[] del = new Transform[cargoZones.Count];
+        int i = 0;
+        foreach (CargoSpawnZone zone in cargoZones)
+        {
+            del[i] = zone.transform; i++;
+        }
+        res = del;
+    }
+    public void GetCargoZones(out List<CargoSpawnZone> res)
+    {
+        res = cargoZones;
+    }
+    public void GetActiveCargoZones(out Transform[] res)
+    {
+        Transform[] del = new Transform[activeZones.Count];
+        int i = 0;
+        foreach (CargoSpawnZone zone in activeZones)
+        {
+            del[i] = zone.transform; i++;
+        }
+        res = del;
+    }
+    public void GetActiveCargoZones(out List<CargoSpawnZone> res)
+    {
+        res = activeZones;
     }
     // Update is called once per frame
     void Update()

@@ -91,4 +91,18 @@ public class ZoneSpawner : MonoBehaviour
     {
         
     }
+    public void GetDeliveryZones(out Transform[] res)
+    { 
+        Transform[] del = new Transform[deliveryZones.Count];
+        int i = 0;
+        foreach (DeliveryZone zone in deliveryZones)
+        {
+            del[i] = zone.transform; i++;
+        }
+        res = del;
+    }
+    public void GetDeliveryZones(out List<DeliveryZone> res)
+    {
+        res = deliveryZones;
+    }
 }

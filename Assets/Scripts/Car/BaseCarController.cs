@@ -213,8 +213,8 @@ public class BaseCarController : MonoBehaviour
         {
             float brakeMultiplier = wheel.IsForwardWheels ? 0.72f : 0.28f;
             wheel.WheelCollider.brakeTorque = _brakeForce * _brakeInput * brakeMultiplier;
-            if (wheel.WheelCollider.brakeTorque > 0f)
-                Debug.Log($"applying brakes: {wheel.WheelCollider.brakeTorque}");
+            //if (wheel.WheelCollider.brakeTorque > 0f)
+                //Debug.Log($"applying brakes: {wheel.WheelCollider.brakeTorque}");
         }
         
     }
