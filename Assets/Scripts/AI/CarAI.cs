@@ -11,6 +11,7 @@ public class CarAI : BaseCarController
     public bool randomPatrol = false;
 
     private NavMeshPath path;
+    private List<Vector3> smoothPath = new List<Vector3>();
     public Transform destination;
     //private NavMeshAgent agent;
     private float lookahead = 5f;
@@ -23,21 +24,18 @@ public class CarAI : BaseCarController
 
     //replace with controller references
     private float maxSteer = 42f;
-    //private float maxSpeed = 70f;
-    //private BaseCarController controller;
-    //private float waitTimer = 0f;
-    //private bool waiting = false;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    private float maxTurn = 90f;
+    private float lookAheadSeg = 3f;
     protected override void Start()
     {
         base.Start();
+        //_maxSpeedForvard = 30;
         FindWheels();
-        //base._wheels = _wheels;
         path = new NavMeshPath();
         waypoints = GetDeliveryWaypoints();
-        //if (waypoints.Length != 0)
-        //    destination = waypoints[0];
-        //UpdatePath();
+        if (waypoints.Length != 0)
+            destination = waypoints[0];
+        UpdatePath();
         //Debug.Log();
     }
 
@@ -55,12 +53,11 @@ public class CarAI : BaseCarController
 
     void UpdatePath()
     {
-        //if (transform.position) //check if in radius
-        //if (waypoints == null) waypoints = GetDeliveryWaypoints();
-        //if (waypoints.Length >= 0)
-        //{
-        //    destination = waypoints[curWaypointGlobal];
-        //}
+        if (waypoints == null) waypoints = GetDeliveryWaypoints();
+        if (waypoints.Length >= 0)
+        {
+            destination = waypoints[curWaypointGlobal];
+        }
         int roadArea = NavMesh.GetAreaFromName("Road");
         int roadMask = 1 << roadArea;
         bool res = NavMesh.CalculatePath(transform.position, destination.position, NavMesh.AllAreas, path);
@@ -77,34 +74,84 @@ public class CarAI : BaseCarController
 
         Vector3 localTarget = transform.InverseTransformPoint(target);
         float steer = Mathf.Clamp(localTarget.x, -maxSteer, maxSteer);
+        float desSpeed = CalcSpeed();
 
+        float speedErr = desSpeed - _speed;
+        float throttle, brake;
+        if (speedErr > 0)
+        {
+            throttle = Mathf.Clamp(speedErr * 0.5f, 0f, 1f);
+            brake = 0f;
+        }
+        else
+        {
+            throttle = 0f;
+            brake = speedErr < -5f ? _brakeForce : 0f;
+        }
+
+        //brake = speedErr < -5f ? _brakeForce : 0f;
+
+        SetInputs(throttle, steer, brake);
+        KindaSteer();
+
+        //KindaMove();
+        //base.ApplyMotorTorque();
+    }
+    float CalcSpeed()
+    {
         float desSpeed = _maxSpeedForvard;
+        float steer = GetMaxTurnAngle();
+
         if (Mathf.Abs(steer) > 40f)
         {
             desSpeed *= 0.1f;
         }
         else if (Mathf.Abs(steer) > 20f)
         {
-            desSpeed *= 0.3f;
+            desSpeed *= 0.2f;
         }
         else if (Mathf.Abs(steer) > 10f)
         {
+            desSpeed *= 0.5f;
+        }
+        else if (Mathf.Abs(steer) > 5f)
+        {
             desSpeed *= 0.7f;
         }
-        
-        
-        float speedErr = desSpeed - _speed;
-        float throttle = Mathf.Clamp(speedErr * 0.5f, 0f, 1f); //??
-        float brake = speedErr < -5f ? _brakeForce : 0f;
+        return desSpeed;
+    }
+    //void FindSmoothPath()
+    //{
+    //    if (path.status != NavMeshPathStatus.PathComplete)
+    //        return;
+    //    if (HasSharpTurns())
+    //    {
+    //        return;
+    //    }
+    //}
+    //bool HasSharpTurns()
+    //{
+    //    if (path.)
+    //}
+    float GetMaxTurnAngle(int segments = 3)
+    {
+        if (path.corners.Length < 3) return 0f;
 
-        
-        SetInputs(throttle, steer, brake);
-        //Debug.Log($"h_input: {_horizontalInput}");
-        KindaSteer();
-        //Debug.Log("inputs set");
+        int start = Mathf.Min(curWaypoint, path.corners.Length - 1);
+        int end = Mathf.Min(start + segments, path.corners.Length - 2);
 
-        //KindaMove();
-        //base.ApplyMotorTorque();
+        float maxAngle = 0f;
+
+        for (int i = start; i < end; i++)
+        {
+            float angle = Vector3.Angle(
+                (path.corners[i + 1] - path.corners[i]).normalized,
+                (path.corners[i + 2] - path.corners[i + 1]).normalized
+            );
+            if (angle > maxAngle) maxAngle = angle;
+        }
+
+        return maxAngle;
     }
     Vector3 GetNextPoint()
     {
@@ -127,7 +174,9 @@ public class CarAI : BaseCarController
         //
         curWaypoint = path.corners.Length - 1;
         MoveToNextPointGlobal();
-        return path.corners[path.corners.Length - 1];
+        UpdatePath();
+        //return path.corners[path.corners.Length - 1];
+        return GetNextPoint();
     }
     new private void FindWheels()
     {
@@ -139,7 +188,6 @@ public class CarAI : BaseCarController
     {
         ZoneSpawner zoneSpawner = GameObject.FindFirstObjectByType<ZoneSpawner>();
         List<DeliveryZone> zones = zoneSpawner.deliveryZones;
-        //GameObject[] zones = GameObject.FindGameObjectsWithTag("DeliveryZone");
         //Debug.Log($"{zones.Length} zones found");
         if (zones != null)
         {
@@ -160,11 +208,11 @@ public class CarAI : BaseCarController
             if (randomPatrol)
             {
                 //Vector3 randDest = RandomNavMeshPoint(20f);
-                //agent.SetDestination(randDest);
+                return;
             }
             return;
         }
         curWaypointGlobal = (curWaypointGlobal + 1) % waypoints.Length;
-        //agent.SetDestination(waypoints[curWaypoint].position);
+        Debug.Log("Moving to next global point");
     }
 }

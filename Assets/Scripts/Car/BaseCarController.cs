@@ -204,7 +204,7 @@ public class BaseCarController : MonoBehaviour
             wheel.WheelCollider.motorTorque = motorTorque;
             wheel.UpdateMeshPosition();
         }
-        Debug.Log("applying torque");
+        //Debug.Log("applying torque");
     }
 
     protected void ApplyBrakes()
@@ -214,7 +214,7 @@ public class BaseCarController : MonoBehaviour
             float brakeMultiplier = wheel.IsForwardWheels ? 0.72f : 0.28f;
             wheel.WheelCollider.brakeTorque = _brakeForce * _brakeInput * brakeMultiplier;
         }
-        Debug.Log("applying brakes");
+        //Debug.Log("applying brakes");
     }
 
     protected void Steer()
@@ -243,7 +243,7 @@ public class BaseCarController : MonoBehaviour
             if (wheel.IsForwardWheels)
             {
                 wheel.WheelCollider.steerAngle = steeringAngle;
-                Debug.Log($"Steering: {steeringAngle}, h_input: {_horizontalInput}");
+                //Debug.Log($"Steering: {steeringAngle}, h_input: {_horizontalInput}");
             }
             //else Debug.Log("no forward wheel found :(");
         }
