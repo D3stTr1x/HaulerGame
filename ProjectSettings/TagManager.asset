@@ -11,6 +11,8 @@ TagManager:
   - MinimapCamera
   - PickUpTrigger
   - CargoSpawnZone
+  - Wheel
+  - WheelCollider
   layers:
   - Default
   - TransparentFX

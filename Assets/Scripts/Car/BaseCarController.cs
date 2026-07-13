@@ -5,7 +5,7 @@ public class BaseCarController : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private Transform _centreOfMass;
-    [SerializeField] protected Wheel[] _wheels;
+    [SerializeField] public Wheel[] _wheels;
     [SerializeField] public CarAudioController carAudio; // можно оставить, но отключать у ботов
 
     [Header("Center of Mass")]
@@ -15,10 +15,10 @@ public class BaseCarController : MonoBehaviour
     [Header("Vehicle Settings")]
     [SerializeField] protected int _motorForce = 2600;
     [SerializeField] private AnimationCurve _powerCurve = AnimationCurve.EaseInOut(0, 1, 1, 0.35f);
-    [SerializeField] private int _brakeForce = 4200;
+    [SerializeField] protected int _brakeForce = 4200;
     [SerializeField] protected float _engineBrakeForce = 950f;
-    [SerializeField] private float _maxSpeedForvard = 48f;
-    [SerializeField] private float _maxSpeedRevers = 14f;
+    [SerializeField] protected float _maxSpeedForvard = 48f;
+    [SerializeField] protected float _maxSpeedRevers = 14f;
 
     [Header("Steering")]
     [SerializeField] private AnimationCurve _emptySterlingCurve;
@@ -90,14 +90,20 @@ public class BaseCarController : MonoBehaviour
         }
     }
 
-    private void FixedUpdate()
+    protected void FixedUpdate()
     {
         CalculateDynamicCenterOfMass();
         UpdateWheelSettingsOptimized();
         ApplyMotorTorque();
         ApplyBrakes();
     }
-
+    //protected void KindaMove()
+    //{
+    //    CalculateDynamicCenterOfMass();
+    //    UpdateWheelSettingsOptimized();
+    //    ApplyMotorTorque();
+    //    //ApplyBrakes();
+    //}
     protected virtual void Update()
     {
         // ѕереопредел€етс€ в PlayerCarController
@@ -198,6 +204,7 @@ public class BaseCarController : MonoBehaviour
             wheel.WheelCollider.motorTorque = motorTorque;
             wheel.UpdateMeshPosition();
         }
+        Debug.Log("applying torque");
     }
 
     protected void ApplyBrakes()
@@ -207,6 +214,7 @@ public class BaseCarController : MonoBehaviour
             float brakeMultiplier = wheel.IsForwardWheels ? 0.72f : 0.28f;
             wheel.WheelCollider.brakeTorque = _brakeForce * _brakeInput * brakeMultiplier;
         }
+        Debug.Log("applying brakes");
     }
 
     protected void Steer()
@@ -218,10 +226,32 @@ public class BaseCarController : MonoBehaviour
         foreach (Wheel wheel in _wheels)
         {
             if (wheel.IsForwardWheels)
+            {
                 wheel.WheelCollider.steerAngle = steeringAngle;
+                //Debug.Log($"Steering: {steeringAngle}, h_input: {_horizontalInput}");
+            }
+            //else Debug.Log("no forward wheel found :(");
         }
     }
+    protected void KindaSteer()  //this is the kinda one
+    {
+        float steeringAngle = _horizontalInput;
+        steeringAngle = Mathf.Clamp(steeringAngle, -42f, 42f);
 
+        foreach (Wheel wheel in _wheels)
+        {
+            if (wheel.IsForwardWheels)
+            {
+                wheel.WheelCollider.steerAngle = steeringAngle;
+                Debug.Log($"Steering: {steeringAngle}, h_input: {_horizontalInput}");
+            }
+            //else Debug.Log("no forward wheel found :(");
+        }
+    }
+    //protected void Steer(float h_input)
+    //{
+
+    //}
     protected virtual void Move()
     {
         // Ћогика огней Ч можно переопределить в PlayerCarController
@@ -244,4 +274,46 @@ public class BaseCarController : MonoBehaviour
             Gizmos.DrawSphere(worldCoM, 0.3f);
         }
     }
+    protected void FindWheels()
+    {
+        Transform tireParent = transform.Find("Tire");
+        Transform colliderParent = transform.Find("Collider");
+        //if (tireParent != null)
+        //{
+        //    GameObject[] wheels = new GameObject[tireParent.childCount];
+        //    for (int i = 0; i < tireParent.childCount; i++)
+        //    {
+        //        wheels[i] = tireParent.GetChild(i).gameObject;
+        //    }
+        //}
+        //if (colliderParent != null)
+        //{
+        //    WheelCollider[] wheelColliders = colliderParent.GetComponentsInChildren<WheelCollider>();
+        //}
+        Wheel[] wheels = {
+            new Wheel(tireParent.Find("Pick Up_7 BL Tire"), colliderParent.Find("WheelCollider_BL").GetComponent<WheelCollider>(), false),
+            new Wheel(tireParent.Find("Pick Up_7 BR Tire"), colliderParent.Find("WheelCollider_BR").GetComponent<WheelCollider>(), false),
+            new Wheel(tireParent.Find("Pick Up_7 FR Tire"), colliderParent.Find("WheelCollider_FR").GetComponent<WheelCollider>(), true),
+            new Wheel(tireParent.Find("Pick Up_7 FL Tire"), colliderParent.Find("WheelCollider_FL").GetComponent<WheelCollider>(), true)
+        };
+        _wheels = wheels;
+        //GameObject[] wheelColliders = GameObject.FindGameObjectsWithTag("WheelCollider");
+    }
 }
+// Wheel struct без изменений
+//[System.Serializable]
+//public struct Wheel
+//{
+//    public Transform WheelMesh;
+//    public WheelCollider WheelCollider;
+//    public bool IsForwardWheels;
+
+//    public void UpdateMeshPosition()
+//    {
+//        Vector3 position;
+//        Quaternion rotation;
+//        WheelCollider.GetWorldPose(out position, out rotation);
+//        WheelMesh.position = position;
+//        WheelMesh.rotation = rotation;
+//    }
+//}
