@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Timer : MonoBehaviour
 {
-    public event Action on30SecPassed;
+    public event Action onSecPassed;
     public TextMeshProUGUI timeText;
     public static Timer Instance;
     public CargoSpawner cargoSpawner;
@@ -20,7 +20,7 @@ public class Timer : MonoBehaviour
     void Start()
     {
         cargoSpawner = GameObject.FindFirstObjectByType<CargoSpawner>();
-        on30SecPassed += cargoSpawner.SpawnRandomInActive;
+        onSecPassed += cargoSpawner.SpawnRandomInActive;
 
         time = 120;
         secPassed = 0;
@@ -55,9 +55,9 @@ public class Timer : MonoBehaviour
             WarningText taskText = GameObject.FindFirstObjectByType<WarningText>();
             taskText.TimesUpMessage();
         }
-        if (secPassed > 0 && secPassed % 3 == 0)
+        if (time > 0 && secPassed > 0 && secPassed % 3 == 0)
         {
-            on30SecPassed?.Invoke();
+            onSecPassed?.Invoke();
             //Debug.Log("Sec passed, cargo spawn event fired");
         }
     }
