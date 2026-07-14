@@ -6,12 +6,6 @@ public class CargoBarrel : CargoBase
     void Start()
     {
         health = 35f;
-        Init();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        base.Start();
     }
 }
