@@ -63,7 +63,7 @@ public class NavArrow : MonoBehaviour
     {
         CargoSpawner zoneSpawner = FindFirstObjectByType<CargoSpawner>();
         zoneSpawner.GetActiveCargoZones(out pickupPoints);
-        if (pickupPoints != null) Debug.Log($"pickPoints: {pickupPoints.Length} (arrow nav)");
+        //if (pickupPoints != null) Debug.Log($"pickPoints: {pickupPoints.Length} (arrow nav)");
     }
     public void SetAsTarget(GameObject target)
     {
@@ -111,7 +111,7 @@ public class NavArrow : MonoBehaviour
         //FindNearestTarget();
         if (_currentTarget != null)
         {
-            Debug.Log($"curTar: {_currentTarget}  (CalculateRoute)");
+            //Debug.Log($"curTar: {_currentTarget}  (CalculateRoute)");
 
             NavMeshQueryFilter filter = new NavMeshQueryFilter();
             filter.areaMask = NavMesh.AllAreas;
@@ -126,7 +126,7 @@ public class NavArrow : MonoBehaviour
             {
                 // Если нашли - строим путь до неё (hit.position - это идеальные координаты на сетке)
                 bool res = NavMesh.CalculatePath(player.position, hit.position, filter, _path);
-                if (res) Debug.Log($"path to nearest point isDelivering = {isDelivering} calculated (arrow nav)");
+                //if (res) Debug.Log($"path to nearest point isDelivering = {isDelivering} calculated (arrow nav)");
             }
             else
             {
