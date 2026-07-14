@@ -156,16 +156,26 @@ public class NavArrow : MonoBehaviour
             uiArrow.gameObject.SetActive(false);
             return;
         }
+        else
+        {
+            uiArrow.gameObject.SetActive(true);
+            Vector3 nextWaypoint;
+            if (_path.corners.Length > 2)
+            {
+                nextWaypoint = _path.corners[2];
+            }
+            else
+            {
+                nextWaypoint = _path.corners[1];
+            }
 
-        uiArrow.gameObject.SetActive(true);
-        Vector3 nextWaypoint = _path.corners[1];
+            Vector3 directionToWaypoint = (nextWaypoint - player.position).normalized;
+            directionToWaypoint.y = 0;
+            Vector3 playerForward = player.forward;
+            playerForward.y = 0;
 
-        Vector3 directionToWaypoint = (nextWaypoint - player.position).normalized;
-        directionToWaypoint.y = 0;
-        Vector3 playerForward = player.forward;
-        playerForward.y = 0;
-
-        float angle = Vector3.SignedAngle(playerForward, directionToWaypoint, Vector3.up);
-        uiArrow.rectTransform.localEulerAngles = new Vector3(0, 0, -angle);
+            float angle = Vector3.SignedAngle(playerForward, directionToWaypoint, Vector3.up);
+            uiArrow.rectTransform.localEulerAngles = new Vector3(0, 0, -angle);
+        }
     }
 }
