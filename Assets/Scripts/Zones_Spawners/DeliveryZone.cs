@@ -35,7 +35,7 @@ public class DeliveryZone : MonoBehaviour
                 loadedCargoHandler.ClearAllCargo();
 
             NavigationSystem nav = Object.FindFirstObjectByType<NavigationSystem>();
-            if (nav != null) nav.SetDeliveryMode(false);
+            //if (nav != null) nav.SetDeliveryMode(false);
         }
         
     }
