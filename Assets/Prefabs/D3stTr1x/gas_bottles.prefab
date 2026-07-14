@@ -125,6 +125,7 @@ GameObject:
   - component: {fileID: 5704491346996098383}
   - component: {fileID: 1595224832693955825}
   - component: {fileID: 957469323725129261}
+  - component: {fileID: 3560443811532999309}
   m_Layer: 0
   m_Name: gas_bottle_fire
   m_TagString: Untagged
@@ -278,3 +279,20 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   isPickedUp: 0
+--- !u!114 &3560443811532999309
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8932456800001617891}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e274ccbb35b53504c9b64a6c0002de66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CargoBottle
+  onCargoDelivered:
+    m_PersistentCalls:
+      m_Calls: []
+  pts: 0
+  health: 0
