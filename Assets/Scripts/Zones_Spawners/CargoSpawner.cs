@@ -13,11 +13,13 @@ public class CargoSpawner : MonoBehaviour
     public GameObject barrelPrefab;
     public GameObject bottlePrefab;
 
+    private GameObject[] prefabs;
     private CargoSpawnZone activeZone;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
+        prefabs = new GameObject[] { smallPrefab, bigPrefab, longPrefab, bottlePrefab, barrelPrefab, canisterPrefab };
         FindZones();
         ActivateAll();
         //DeactivateAll();
@@ -76,12 +78,10 @@ public class CargoSpawner : MonoBehaviour
     public void SpawnRandomInActive()
     {
         Debug.Log("SpawnRandom in active called");
-        GameObject[] cargos = new GameObject[] { smallPrefab, bigPrefab, longPrefab, bottlePrefab, barrelPrefab, canisterPrefab };
         foreach (CargoSpawnZone zone in activeZones)
         {
-            int idx = Random.Range(0, cargos.Length);
-            zone.SpawnCargo(cargos[idx]);
-            
+            int idx = Random.Range(0, prefabs.Length);
+            zone.SpawnCargo(prefabs[idx]);
         }
     }
     void UpdateActiveZones()

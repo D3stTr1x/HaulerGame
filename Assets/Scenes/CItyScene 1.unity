@@ -5632,8 +5632,8 @@ MonoBehaviour:
   bigPrefab: {fileID: 2923285970119328079, guid: a3d6ec76bfce7cd4fb3305e78e2646ec, type: 3}
   longPrefab: {fileID: 5627794029005968651, guid: 8eb0ee45d5d2ff04baf2c0206d30aad3, type: 3}
   canisterPrefab: {fileID: 3148773547245455129, guid: 9c6a447d36407014fa80e3d65d91d597, type: 3}
-  barrelPrefab: {fileID: 0}
-  bottlePrefab: {fileID: 0}
+  barrelPrefab: {fileID: 3298472240510678530, guid: 8c4caa138d45a2b4c840b638188c3bad, type: 3}
+  bottlePrefab: {fileID: 1476925197459180189, guid: c4f68f2fcc7ee234986ad073012444d7, type: 3}
 --- !u!1001 &1820426478
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -12,7 +12,6 @@ public class DeliveryZone : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            
             if (loadedCargoHandler)
             {
                 numCargos = loadedCargoHandler.GetNumCargos();
