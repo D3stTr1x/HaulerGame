@@ -109,7 +109,7 @@ public class CarAI : BaseCarController
         {
             throttle = 0f;
             //brake = speedErr < -5f ? _brakeForce : 0f;
-            brake = _brakeForce;
+            brake = _brakeForce + 1000;
         }
 
         //brake = speedErr < -5f ? _brakeForce : 0f;

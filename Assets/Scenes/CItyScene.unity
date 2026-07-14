@@ -779,7 +779,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1264288009
 Transform:
   m_ObjectHideFlags: 0
@@ -1427,6 +1427,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d88390245b05dc44abcff3bd4b740de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CargoSpawner
+  cargoZones: []
+  activeZones: []
   smallPrefab: {fileID: 3807052068757714860, guid: 164e65b655078ff44a125a2a99c2d357, type: 3}
   bigPrefab: {fileID: 2923285970119328079, guid: a3d6ec76bfce7cd4fb3305e78e2646ec, type: 3}
   longPrefab: {fileID: 5627794029005968651, guid: 8eb0ee45d5d2ff04baf2c0206d30aad3, type: 3}
