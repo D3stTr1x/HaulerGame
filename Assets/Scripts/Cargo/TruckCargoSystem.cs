@@ -1,6 +1,7 @@
 using TMPro;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class TruckCargoSystem : MonoBehaviour
 {
@@ -24,6 +25,7 @@ public class TruckCargoSystem : MonoBehaviour
 
     public float totalMassCargo = 0f;
     public List<Transform> loadedCargos = new List<Transform>();
+    public event Action onCargoListSizeChanged;
 
     private Dictionary<Transform, Vector3> allocatedTargets = new Dictionary<Transform, Vector3>();
 
@@ -31,9 +33,10 @@ public class TruckCargoSystem : MonoBehaviour
     public Transform GetCargoHoldPoint() => cargoHoldPoint;
     private NavigationSystem nav;
 
+
     private void Start()
     {
-        nav = Object.FindFirstObjectByType<NavigationSystem>();
+        nav = FindFirstObjectByType<NavigationSystem>();
     }
 
     public void LoadCargo(Transform cargo)
@@ -42,16 +45,7 @@ public class TruckCargoSystem : MonoBehaviour
         loadedCargos.Add(cargo);
 
         CargoPickup pickup = cargo.GetComponent<CargoPickup>();
-
-        // ИСПРАВЛЕНИЕ: Убираем прибавление массы отсюда. 
-        // Масса будет добавлена только после того, как груз окажется в кузове.
-        // if (pickup != null) totalMassCargo += pickup.massCargo; 
-
-//<<<<<<< HEAD
-//        if (nav != null) nav.SetDeliveryMode(true);
-//=======
-        //NavigationSystem nav = Object.FindFirstObjectByType<NavigationSystem>();
-        //if (nav != null) nav.SetDeliveryMode(true);
+        onCargoListSizeChanged?.Invoke();
     }
 
     public void UnloadCargo(Transform cargo)

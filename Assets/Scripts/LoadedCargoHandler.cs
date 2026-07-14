@@ -1,3 +1,6 @@
+using NUnit.Framework;
+using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class LoadedCargoHandler : MonoBehaviour
@@ -13,23 +16,43 @@ public class LoadedCargoHandler : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player");
         truckCargoSystem = player.GetComponent<TruckCargoSystem>();
         zoneSpawner = GameObject.FindFirstObjectByType<ZoneSpawner>();
+
+        truckCargoSystem.onCargoListSizeChanged += UpdateNumCargos;
         numCargos = 0;
     }
-    //private void OnTriggerEnter(Collider other)
-    //{
-    //    if (other.gameObject.CompareTag("Player"))
-    //    {
-    //        GetLoadedCargos();
-    //    }
-    //}
+    private void Update()
+    {
+        //if ()
+    }
     public int GetNumCargos()
     {
-        return truckCargoSystem.loadedCargos.Count;
+        return numCargos;
+    }
+    private void UpdateNumCargos()
+    {
+        numCargos = 0;
+        List<Transform> curCargos = GetLoadedCargos();
+        foreach (Transform t in curCargos)
+        {
+            if (t.IsDestroyed())
+            {
+                //Debug.Log("Cargo was destroyed");
+            }
+            else numCargos++;
+        }
+    }
+    public List<Transform> GetLoadedCargos()
+    {
+        return truckCargoSystem.loadedCargos;
     }
     public void ClearAllCargo()
     {
         truckCargoSystem.ClearAllCargo();
     }
+    //public void CheckDestroyed(int size)
+    //{
+        
+    //}
     //{
     //public void DeactivateZones()
     //    Debug.Log("Zone deactivation started (loaded cargo handler)");
@@ -42,9 +65,4 @@ public class LoadedCargoHandler : MonoBehaviour
     //        }
     //    }
     //}
-    // Update is called once per frame
-    void Update()
-    {
-        //GetLoadedCargos();
-    }
 }
