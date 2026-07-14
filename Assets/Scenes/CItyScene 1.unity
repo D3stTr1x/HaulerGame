@@ -5440,7 +5440,7 @@ Transform:
   m_GameObject: {fileID: 1770542556}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 93.05246, y: -0.5, z: -47.9076}
+  m_LocalPosition: {x: 93.05246, y: -0.6, z: -47.9076}
   m_LocalScale: {x: 100, y: 1, z: 100}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5631,6 +5631,9 @@ MonoBehaviour:
   smallPrefab: {fileID: 3807052068757714860, guid: 164e65b655078ff44a125a2a99c2d357, type: 3}
   bigPrefab: {fileID: 2923285970119328079, guid: a3d6ec76bfce7cd4fb3305e78e2646ec, type: 3}
   longPrefab: {fileID: 5627794029005968651, guid: 8eb0ee45d5d2ff04baf2c0206d30aad3, type: 3}
+  canisterPrefab: {fileID: 3148773547245455129, guid: 9c6a447d36407014fa80e3d65d91d597, type: 3}
+  barrelPrefab: {fileID: 0}
+  bottlePrefab: {fileID: 0}
 --- !u!1001 &1820426478
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7036,6 +7039,14 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: 32.77
       objectReference: {fileID: 0}
+    - target: {fileID: 2458891275571534420, guid: 23f5f3087e279c94ea1fee2665fa0ad2, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 28.68
+      objectReference: {fileID: 0}
+    - target: {fileID: 2458891275571534420, guid: 23f5f3087e279c94ea1fee2665fa0ad2, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -1.24
+      objectReference: {fileID: 0}
     - target: {fileID: 2994051839682158163, guid: 23f5f3087e279c94ea1fee2665fa0ad2, type: 3}
       propertyPath: m_LocalPosition.y
       value: -2
@@ -7147,6 +7158,18 @@ PrefabInstance:
     - target: {fileID: 7923921146412217102, guid: 23f5f3087e279c94ea1fee2665fa0ad2, type: 3}
       propertyPath: m_LocalPosition.y
       value: -2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7936660831176914084, guid: 23f5f3087e279c94ea1fee2665fa0ad2, type: 3}
+      propertyPath: m_Size.x
+      value: 2.295013
+      objectReference: {fileID: 0}
+    - target: {fileID: 7936660831176914084, guid: 23f5f3087e279c94ea1fee2665fa0ad2, type: 3}
+      propertyPath: m_Size.y
+      value: 4.334429
+      objectReference: {fileID: 0}
+    - target: {fileID: 7936660831176914084, guid: 23f5f3087e279c94ea1fee2665fa0ad2, type: 3}
+      propertyPath: m_Size.z
+      value: 2.52282
       objectReference: {fileID: 0}
     - target: {fileID: 8107913954281485472, guid: 23f5f3087e279c94ea1fee2665fa0ad2, type: 3}
       propertyPath: m_LocalPosition.y
