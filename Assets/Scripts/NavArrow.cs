@@ -62,8 +62,9 @@ public class NavArrow : MonoBehaviour
     void GetCargoSpawnZones()
     {
         CargoSpawner zoneSpawner = FindFirstObjectByType<CargoSpawner>();
-        zoneSpawner.GetActiveCargoZones(out pickupPoints);
-        //if (pickupPoints != null) Debug.Log($"pickPoints: {pickupPoints.Length} (arrow nav)");
+        //zoneSpawner.GetActiveCargoZones(out pickupPoints);
+        zoneSpawner.GetCargoZones(out pickupPoints);
+        if (pickupPoints != null) Debug.Log($"pickPoints: {pickupPoints.Length} (arrow nav)");
     }
     public void SetAsTarget(GameObject target)
     {
@@ -88,8 +89,9 @@ public class NavArrow : MonoBehaviour
     {
         if (isDelivering) return;
         
-        GetCargoSpawnZones(); //?here?
+        //GetCargoSpawnZones(); //?here?
         if (pickupPoints.Length == 0 || pickupPoints == null) return;
+      
 
         float minDistance = Mathf.Infinity;
         Transform nearestPoint = null;
@@ -104,7 +106,12 @@ public class NavArrow : MonoBehaviour
             }
         }
 
-        _currentTarget = nearestPoint;
+        if (nearestPoint != null && _currentTarget != nearestPoint)
+        {
+            UnsetTarget();
+            _currentTarget = nearestPoint;
+            Debug.Log($"{_currentTarget}   (curTar, FindNearestCargo)");
+        }
     }
     private void CalculateRoute()
     {
@@ -126,7 +133,7 @@ public class NavArrow : MonoBehaviour
             {
                 // Если нашли - строим путь до неё (hit.position - это идеальные координаты на сетке)
                 bool res = NavMesh.CalculatePath(player.position, hit.position, filter, _path);
-                //if (res) Debug.Log($"path to nearest point isDelivering = {isDelivering} calculated (arrow nav)");
+                if (res) Debug.Log($"path to nearest point isDelivering = {isDelivering} calculated (arrow nav), curTar: {_currentTarget}");
             }
             else
             {

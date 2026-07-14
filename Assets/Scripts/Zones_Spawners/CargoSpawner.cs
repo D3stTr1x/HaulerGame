@@ -15,8 +15,9 @@ public class CargoSpawner : MonoBehaviour
     void Awake()
     {
         FindZones();
-        DeactivateAll();
-        ActivateRandom();
+        ActivateAll();
+        //DeactivateAll();
+        //ActivateRandom();
 
         Timer timer = FindFirstObjectByType<Timer>();
         timer.onSecPassed += SpawnRandomInActive;
@@ -51,7 +52,7 @@ public class CargoSpawner : MonoBehaviour
     {
         //if (!activeZoneExists)  //only one active at a time for now
         //{
-        GetActiveZones();
+        UpdateActiveZones();
         if (activeZones.Count == cargoZones.Count) return;
 
         int idx = Random.Range(0, cargoZones.Count);
@@ -62,7 +63,7 @@ public class CargoSpawner : MonoBehaviour
         cargoZones[idx].gameObject.SetActive(true);
         activeZone = cargoZones[idx];
 
-        GetActiveZones();
+        UpdateActiveZones();
 
         //activeZoneExists = true;
         //}
@@ -79,7 +80,7 @@ public class CargoSpawner : MonoBehaviour
             
         }
     }
-    void GetActiveZones()
+    void UpdateActiveZones()
     {
         foreach (CargoSpawnZone zone in cargoZones)
         {
@@ -110,6 +111,16 @@ public class CargoSpawner : MonoBehaviour
             del[i] = zone.transform; i++;
         }
         res = del;
+    }
+    public void ActivateAll()
+    {
+        foreach (CargoSpawnZone zone in cargoZones)
+        {
+            zone.gameObject.SetActive(true);
+        }
+        //activeZoneExists = false;
+        //activeZone = null;
+        UpdateActiveZones();
     }
     public void GetActiveCargoZones(out List<CargoSpawnZone> res)
     {
