@@ -31,7 +31,8 @@ public class NavigationSystem : MonoBehaviour
         _path = new NavMeshPath();
         //GetDeliveryPoints();
         //GetCargoSpawnZones();
-        FindNearestTarget();
+        //FindNearestTarget();
+        SetActivePoint();
     }
 
     void Update()
@@ -51,8 +52,10 @@ public class NavigationSystem : MonoBehaviour
     public void SetDeliveryMode(bool deliveryMode)
     {
         isDelivering = deliveryMode;
-        FindNearestTarget(); // —разу ищем новую цель при смене режима
+        //FindNearestTarget(); // —разу ищем новую цель при смене режима
+        SetActivePoint();
         CalculateRoute();
+        Debug.Log($"isDelivering changed: {isDelivering}");
     }
 
     public void FindNearestTarget()
@@ -63,7 +66,7 @@ public class NavigationSystem : MonoBehaviour
         }
         else
         {
-            GetCargoSpawnZones();
+            GetActiveCargoSpawnZones();
         }
         // ¬ыбираем активный массив в зависимости от того, едем мы с грузом или пустые
         Transform[] currentPoints = isDelivering ? deliveryPoints : pickupPoints;
@@ -95,9 +98,22 @@ public class NavigationSystem : MonoBehaviour
         }
 
         _currentTarget = nearestPoint;
-        //Debug.Log("Nearest point for arrow found");
+        Debug.Log("Nearest point for arrow found");
     }
-
+    public void SetActivePoint()
+    {
+        if (isDelivering)
+        {
+            //tries to get it before zone has been spawned;
+            Transform pt = GetActiveDeliveryZone().transform;
+            _currentTarget = pt;
+        }
+        else
+        {
+            Transform pt = GetActiveCargoSpawnZone().transform;
+            _currentTarget = pt;
+        }
+    }
     private void CalculateRoute()
     {
         if (_currentTarget != null)
@@ -130,11 +146,27 @@ public class NavigationSystem : MonoBehaviour
         zoneSpawner.GetDeliveryZones(out deliveryPoints);
         if (deliveryPoints != null) Debug.Log($"delPoints: {deliveryPoints.Length} (arrow nav)");
     }
-    void GetCargoSpawnZones()
+    void GetActiveCargoSpawnZones()
     {
         CargoSpawner zoneSpawner = FindFirstObjectByType<CargoSpawner>();
         zoneSpawner.GetActiveCargoZones(out pickupPoints);
         if (pickupPoints != null) Debug.Log($"pickPoints: {pickupPoints.Length} (arrow nav)");
+    }
+    DeliveryZone GetActiveDeliveryZone()
+    {
+        ZoneSpawner zoneSpawner = FindFirstObjectByType<ZoneSpawner>();
+        DeliveryZone zone = zoneSpawner.GetActiveZone();
+        if (zone != null) Debug.Log($"active del zone found (arrow nav)");
+        return zone;
+        //if (deliveryPoints != null) Debug.Log($"delPoints: {deliveryPoints.Length} (arrow nav)");
+    }
+    CargoSpawnZone GetActiveCargoSpawnZone()
+    {
+        CargoSpawner zoneSpawner = FindFirstObjectByType<CargoSpawner>();
+        CargoSpawnZone zone = zoneSpawner.GetActiveZone();
+        if (zone != null) Debug.Log($"active spawn zone found (arrow nav)");
+        return zone;
+        //if (deliveryPoints != null) Debug.Log($"delPoints: {deliveryPoints.Length} (arrow nav)");
     }
     private void UpdateArrowDirection()
     {

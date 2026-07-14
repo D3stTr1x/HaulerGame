@@ -62,16 +62,16 @@ public class CarAI : BaseCarController
         int roadArea = NavMesh.GetAreaFromName("Road");
         int roadMask = 1 << roadArea;
         bool res = NavMesh.CalculatePath(transform.position, destination.position, NavMesh.AllAreas, path);
-        if (res)
-            Debug.Log($"Path found, {path.corners.Length}");
-        else Debug.Log("Path not found");
+        //if (res)
+        //    Debug.Log($"Path found, {path.corners.Length}");
+        //else Debug.Log("Path not found");
         curWaypoint = 0;
     }
     void FollowPath()   
     {
         if (path.corners.Length == 0) return;
         Vector3 target = GetNextPoint();
-        Debug.Log("Next point foound(AI)");
+        //Debug.Log("Next point found(AI)");
         
         //Debug.Log($"got next point: {target}");
 
@@ -115,7 +115,7 @@ public class CarAI : BaseCarController
         //brake = speedErr < -5f ? _brakeForce : 0f;
 
         SetInputs(throttle, steer, brake);
-        Debug.Log("Inputs set, following path");
+        //Debug.Log("Inputs set, following path");
         KindaSteer();
 
         //KindaMove();

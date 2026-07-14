@@ -9,14 +9,17 @@ public class CargoSpawner : MonoBehaviour
     public GameObject smallPrefab;
     public GameObject bigPrefab;
     public GameObject longPrefab;
-
+    private CargoSpawnZone activeZone;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
         FindZones();
-        //DeactivateAll();
+        DeactivateAll();
         ActivateRandom();
+
+        Timer timer = FindFirstObjectByType<Timer>();
+        timer.onSecPassed += SpawnRandomInActive;
     }
     void FindZones()
     {
@@ -33,6 +36,7 @@ public class CargoSpawner : MonoBehaviour
             zone.gameObject.SetActive(false);
         }
         //activeZoneExists = false;
+        activeZone = null;
     }
     public void DeactivateZone(GameObject zone)
     {
@@ -41,6 +45,7 @@ public class CargoSpawner : MonoBehaviour
             zone.SetActive(false);
         }
         //activeZoneExists = false;
+        activeZone = null;
     }
     public void ActivateRandom()
     {
@@ -55,6 +60,7 @@ public class CargoSpawner : MonoBehaviour
             idx = (idx+1)%cargoZones.Count;
         }
         cargoZones[idx].gameObject.SetActive(true);
+        activeZone = cargoZones[idx];
 
         GetActiveZones();
 
@@ -108,6 +114,10 @@ public class CargoSpawner : MonoBehaviour
     public void GetActiveCargoZones(out List<CargoSpawnZone> res)
     {
         res = activeZones;
+    }
+    public CargoSpawnZone GetActiveZone()
+    {
+        return activeZone;
     }
     // Update is called once per frame
     void Update()
