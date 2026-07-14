@@ -7,7 +7,7 @@ public class MenuButtonManager : MonoBehaviour
 {
     [SerializeField] private string menuSceneName = "MainMenu";
     [SerializeField] private string gameDemoSceneName = "Demo";
-    [SerializeField] private string gameSceneName = "CItyScene";
+    [SerializeField] private string gameSceneName = "CItyScene 1";
 
     [SerializeField] private Image menuImg;
     [SerializeField] private Button menuButton1;
