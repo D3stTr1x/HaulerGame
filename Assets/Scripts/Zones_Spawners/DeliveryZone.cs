@@ -27,7 +27,7 @@ public class DeliveryZone : MonoBehaviour
             Debug.Log($"Cargo entered trigger, numDelivered: {numDelivered}");
             //Destroy(other.gameObject);
         }
-        //Debug.Log($"numCargos: {numCargos}, numDelivered: {numDelivered}");
+        Debug.Log($"numCargos: {numCargos}, numDelivered: {numDelivered}");
         if (numCargos != 0 && numDelivered == numCargos)
         {
             DeactivateZone();
