@@ -56,7 +56,7 @@ public class Timer : MonoBehaviour
             WarningText taskText = GameObject.FindFirstObjectByType<WarningText>();
             taskText.TimesUpMessage();
         }
-        if (time > 0 && secPassed >= 0 && secPassed % 15 == 0)
+        if (time > 0 && secPassed >= 0 && secPassed % 30 == 0)
         {
             onSecPassed?.Invoke();
             //Debug.Log("Sec passed, cargo spawn event fired");
