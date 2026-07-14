@@ -20,7 +20,8 @@ public class Timer : MonoBehaviour
     void Start()
     {
         cargoSpawner = GameObject.FindFirstObjectByType<CargoSpawner>();
-        onSecPassed += cargoSpawner.SpawnRandomInActive;
+        if (cargoSpawner)
+            onSecPassed += cargoSpawner.SpawnRandomInActive;
 
         time = 120;
         secPassed = 0;
@@ -55,7 +56,7 @@ public class Timer : MonoBehaviour
             WarningText taskText = GameObject.FindFirstObjectByType<WarningText>();
             taskText.TimesUpMessage();
         }
-        if (time > 0 && secPassed > 0 && secPassed % 3 == 0)
+        if (time > 0 && secPassed >= 0 && secPassed % 30 == 0)
         {
             onSecPassed?.Invoke();
             //Debug.Log("Sec passed, cargo spawn event fired");

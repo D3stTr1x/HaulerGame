@@ -6,13 +6,15 @@ using UnityEngine;
 public class ZoneSpawner : MonoBehaviour
 {
     //private GameObject[] deliveryZones;
-    private List<DeliveryZone> deliveryZones = new List<DeliveryZone>();
+    public List<DeliveryZone> deliveryZones = new List<DeliveryZone>();
     private bool activeZoneExists;
-    private NavigationSystem navigationSystem;
+
     public TruckCargoSystem truckCargoSystem;
+    private NavigationSystem navigationSystem;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-
+//    void Awake()
+//=======
     void Start()
     {
         // Находим навигатор на сцене, иначе он был равен null
@@ -45,6 +47,7 @@ public class ZoneSpawner : MonoBehaviour
         {
             deliveryZones.Add(zone.GetComponent<DeliveryZone>());
         }
+        Debug.Log($"Delivery zones found: {deliveryZones.Count}");
     }
     public void DeactivateAll()
     {

@@ -29,9 +29,10 @@ public class CargoSpawnZone : MonoBehaviour
         //Debug.Log("Something spawned");
         //Transform pos = gameObject.transform;
         //pos.localScale = cargo.transform.localScale;
+        Transform cargoTr = cargo.transform;
         Transform pos = cargo.transform;
         pos.position = transform.position;
-        pos.position = new Vector3(pos.position.x + Random.Range(-7.5f, 7.5f), pos.position.y - 4f, pos.position.z + Random.Range(-7.5f, 7.5f));
+        pos.position = new Vector3(pos.position.x + Random.Range(-7.5f, 7.5f), pos.position.y + cargoTr.localScale.y + 2, pos.position.z + Random.Range(-7.5f, 7.5f));
         //pos.Sca
 
         GameObject.Instantiate(cargo, pos);
