@@ -145,10 +145,12 @@ public class TruckCargoSystem : MonoBehaviour
         return new Bounds(localCenter, extents * 2f);
     }
 
+
     private Vector3 GetCargoExtents(Transform cargo)
     {
+        // Сначала пробуем найти стандартную коробку (как было раньше)
         BoxCollider box = cargo.GetComponentInChildren<BoxCollider>();
-        if (box != null)
+        if (box != null && !box.isTrigger)
         {
             return new Vector3(
                 Mathf.Abs(box.size.x * box.transform.lossyScale.x),
@@ -156,6 +158,20 @@ public class TruckCargoSystem : MonoBehaviour
                 Mathf.Abs(box.size.z * box.transform.lossyScale.z)
             ) / 2f;
         }
+
+        // ИСПРАВЛЕНИЕ 2: Если это канистра (MeshCollider, CapsuleCollider и т.д.)
+        // Ищем ЛЮБОЙ коллайдер внутри груза, который НЕ является триггером.
+        Collider[] colliders = cargo.GetComponentsInChildren<Collider>();
+        foreach (Collider col in colliders)
+        {
+            if (!col.isTrigger)
+            {
+                // Возвращаем реальные границы физического объекта
+                return col.bounds.extents;
+            }
+        }
+
+        // Страховочный вариант, если коллайдер почему-то вообще не найден
         return Vector3.one * 0.5f;
     }
 
