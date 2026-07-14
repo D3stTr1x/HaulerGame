@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 6394688848614858550}
   - component: {fileID: 8127730750034448450}
   - component: {fileID: 5925245791684409465}
+  - component: {fileID: 6702022527434297438}
   m_Layer: 0
   m_Name: barrel_oil
   m_TagString: Untagged
@@ -167,6 +168,23 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &6702022527434297438
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1043024041171822397}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27e3bafd8d1ae04478dbe65d63a74a3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CargoBarrel
+  onCargoDelivered:
+    m_PersistentCalls:
+      m_Calls: []
+  pts: 0
+  health: 0
 --- !u!1 &3298472240510678530
 GameObject:
   m_ObjectHideFlags: 0
@@ -176,6 +194,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3468655123819846548}
+  - component: {fileID: -3227952675609192863}
   m_Layer: 0
   m_Name: barrel_oil
   m_TagString: Untagged
@@ -199,6 +218,23 @@ Transform:
   - {fileID: 8299166010746841102}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-3227952675609192863
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3298472240510678530}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27e3bafd8d1ae04478dbe65d63a74a3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CargoBarrel
+  onCargoDelivered:
+    m_PersistentCalls:
+      m_Calls: []
+  pts: 0
+  health: 0
 --- !u!1 &5790806805242240722
 GameObject:
   m_ObjectHideFlags: 0

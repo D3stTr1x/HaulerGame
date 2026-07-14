@@ -4,19 +4,23 @@ using UnityEngine;
 
 public class CargoSpawner : MonoBehaviour
 {
-    private List<CargoSpawnZone> cargoZones = new List<CargoSpawnZone>();
-    private List<CargoSpawnZone> activeZones = new List<CargoSpawnZone>();
+    public List<CargoSpawnZone> cargoZones = new List<CargoSpawnZone>();
+    public List<CargoSpawnZone> activeZones = new List<CargoSpawnZone>();
     public GameObject smallPrefab;
     public GameObject bigPrefab;
     public GameObject longPrefab;
-
+    private CargoSpawnZone activeZone;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    void Awake()
     {
         FindZones();
+        ActivateAll();
         //DeactivateAll();
-        ActivateRandom();
+        //ActivateRandom();
+
+        Timer timer = FindFirstObjectByType<Timer>();
+        timer.onSecPassed += SpawnRandomInActive;
     }
     void FindZones()
     {
@@ -33,6 +37,7 @@ public class CargoSpawner : MonoBehaviour
             zone.gameObject.SetActive(false);
         }
         //activeZoneExists = false;
+        activeZone = null;
     }
     public void DeactivateZone(GameObject zone)
     {
@@ -41,12 +46,13 @@ public class CargoSpawner : MonoBehaviour
             zone.SetActive(false);
         }
         //activeZoneExists = false;
+        activeZone = null;
     }
     public void ActivateRandom()
     {
         //if (!activeZoneExists)  //only one active at a time for now
         //{
-        GetActiveZones();
+        UpdateActiveZones();
         if (activeZones.Count == cargoZones.Count) return;
 
         int idx = Random.Range(0, cargoZones.Count);
@@ -55,8 +61,9 @@ public class CargoSpawner : MonoBehaviour
             idx = (idx+1)%cargoZones.Count;
         }
         cargoZones[idx].gameObject.SetActive(true);
+        activeZone = cargoZones[idx];
 
-        GetActiveZones();
+        UpdateActiveZones();
 
         //activeZoneExists = true;
         //}
@@ -73,13 +80,55 @@ public class CargoSpawner : MonoBehaviour
             
         }
     }
-    void GetActiveZones()
+    void UpdateActiveZones()
     {
         foreach (CargoSpawnZone zone in cargoZones)
         {
             if (zone.gameObject.activeInHierarchy)
                 activeZones.Add(zone);
         }
+    }
+    public void GetCargoZones(out Transform[] res)
+    {
+        Transform[] del = new Transform[cargoZones.Count];
+        int i = 0;
+        foreach (CargoSpawnZone zone in cargoZones)
+        {
+            del[i] = zone.transform; i++;
+        }
+        res = del;
+    }
+    public void GetCargoZones(out List<CargoSpawnZone> res)
+    {
+        res = cargoZones;
+    }
+    public void GetActiveCargoZones(out Transform[] res)
+    {
+        Transform[] del = new Transform[activeZones.Count];
+        int i = 0;
+        foreach (CargoSpawnZone zone in activeZones)
+        {
+            del[i] = zone.transform; i++;
+        }
+        res = del;
+    }
+    public void ActivateAll()
+    {
+        foreach (CargoSpawnZone zone in cargoZones)
+        {
+            zone.gameObject.SetActive(true);
+        }
+        //activeZoneExists = false;
+        //activeZone = null;
+        UpdateActiveZones();
+    }
+    public void GetActiveCargoZones(out List<CargoSpawnZone> res)
+    {
+        res = activeZones;
+    }
+    public CargoSpawnZone GetActiveZone()
+    {
+        return activeZone;
     }
     // Update is called once per frame
     void Update()

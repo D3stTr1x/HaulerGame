@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 4485792213371234632}
   - component: {fileID: 151919490718598906}
   - component: {fileID: 8477043135517104324}
+  - component: {fileID: 5886205433032511694}
   m_Layer: 0
   m_Name: Fuel_tank
   m_TagString: Untagged
@@ -167,6 +168,23 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -5817326674769992385, guid: 18fe21f48b31a51458a2d7ab0cf920a1, type: 3}
+--- !u!114 &5886205433032511694
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 992886502687965950}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08a10077d30fe5d42b5e5bed2882c335, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CargoCanister
+  onCargoDelivered:
+    m_PersistentCalls:
+      m_Calls: []
+  pts: 0
+  health: 0
 --- !u!1 &3148773547245455129
 GameObject:
   m_ObjectHideFlags: 0
@@ -176,6 +194,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4798261656019188870}
+  - component: {fileID: 8023596924019491267}
   m_Layer: 0
   m_Name: Kanistra
   m_TagString: Untagged
@@ -199,6 +218,23 @@ Transform:
   - {fileID: 471929837788813380}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8023596924019491267
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3148773547245455129}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08a10077d30fe5d42b5e5bed2882c335, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CargoCanister
+  onCargoDelivered:
+    m_PersistentCalls:
+      m_Calls: []
+  pts: 0
+  health: 0
 --- !u!1 &6035089166448806385
 GameObject:
   m_ObjectHideFlags: 0

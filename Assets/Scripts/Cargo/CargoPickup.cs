@@ -69,7 +69,17 @@ public class CargoPickup : MonoBehaviour
         if (zoneSpawner != null)
         {
             onCargoPickedUp.AddListener(zoneSpawner.ActivateRandom);
-        }     
+        }
+        //NavigationSystem nav = FindFirstObjectByType<NavigationSystem>();
+        //if (nav != null)
+        //{
+        //    onCargoPickedUp.AddListener(nav.SetDeliveryPointTarget);
+        //}
+        //NavArrow nav = FindFirstObjectByType<NavArrow>();
+        //if (nav != null)
+        //{
+        //    onCargoPickedUp.AddListener()
+        //}
     }
     private void Start()
     {

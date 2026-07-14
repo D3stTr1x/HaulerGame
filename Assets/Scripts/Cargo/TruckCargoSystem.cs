@@ -29,7 +29,12 @@ public class TruckCargoSystem : MonoBehaviour
 
     public bool CanPickupCargo() => loadedCargos.Count < maxCargoCount;
     public Transform GetCargoHoldPoint() => cargoHoldPoint;
+    private NavigationSystem nav;
 
+    private void Start()
+    {
+        nav = Object.FindFirstObjectByType<NavigationSystem>();
+    }
 
     public void LoadCargo(Transform cargo)
     {
@@ -42,8 +47,11 @@ public class TruckCargoSystem : MonoBehaviour
         // Масса будет добавлена только после того, как груз окажется в кузове.
         // if (pickup != null) totalMassCargo += pickup.massCargo; 
 
-        NavigationSystem nav = Object.FindAnyObjectByType<NavigationSystem>();
-        if (nav != null) nav.SetDeliveryMode(true);
+//<<<<<<< HEAD
+//        if (nav != null) nav.SetDeliveryMode(true);
+//=======
+        //NavigationSystem nav = Object.FindFirstObjectByType<NavigationSystem>();
+        //if (nav != null) nav.SetDeliveryMode(true);
     }
 
     public void UnloadCargo(Transform cargo)

@@ -27,15 +27,15 @@ public class DeliveryZone : MonoBehaviour
             Debug.Log($"Cargo entered trigger, numDelivered: {numDelivered}");
             //Destroy(other.gameObject);
         }
-        //Debug.Log($"numCargos: {numCargos}, numDelivered: {numDelivered}");
+        Debug.Log($"numCargos: {numCargos}, numDelivered: {numDelivered}");
         if (numCargos != 0 && numDelivered == numCargos)
         {
             DeactivateZone();
             if (!gameObject.activeInHierarchy)
                 loadedCargoHandler.ClearAllCargo();
 
-            NavigationSystem nav = Object.FindAnyObjectByType<NavigationSystem>();
-            if (nav != null) nav.SetDeliveryMode(false);
+            NavigationSystem nav = Object.FindFirstObjectByType<NavigationSystem>();
+            //if (nav != null) nav.SetDeliveryMode(false);
         }
         
     }
