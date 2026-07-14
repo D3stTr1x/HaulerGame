@@ -333,6 +333,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MenuButtonManager
   menuSceneName: MainMenu
+  gameDemoSceneName: Demo
   gameSceneName: Demo
   menuImg: {fileID: 9186673136398180294}
   menuButton1: {fileID: 5104143860313501807}
