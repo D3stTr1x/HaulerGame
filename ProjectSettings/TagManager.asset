@@ -13,6 +13,7 @@ TagManager:
   - CargoSpawnZone
   - Wheel
   - WheelCollider
+  - ScreenCanvas
   layers:
   - Default
   - TransparentFX
