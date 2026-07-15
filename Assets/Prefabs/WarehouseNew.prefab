@@ -135,6 +135,7 @@ MonoBehaviour:
   HelpText: {fileID: 0}
   pulseSpeed: 2
   pulseIntensity: 0.4
+  isTake: 0
   massCargo: 0
   onCargoPickedUp:
     m_PersistentCalls:
@@ -183,6 +184,17 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   pts: 0
+  isTake: {fileID: 0}
+  uiCanvas: {fileID: 0}
+  healthSlider: {fileID: 0}
+  showOnDamageDuration: 2
+  showTimer: 0
+  healthBarFill: {fileID: 0}
+  greenColor: {r: 0.2, g: 0.8, b: 0.2, a: 1}
+  yellowColor: {r: 0.9, g: 0.8, b: 0.1, a: 1}
+  redColor: {r: 0.8, g: 0.2, b: 0.2, a: 1}
+  health: 0
+  maxHealth: 0
 --- !u!1 &777223267208237795
 GameObject:
   m_ObjectHideFlags: 0
@@ -318,6 +330,7 @@ MonoBehaviour:
   HelpText: {fileID: 0}
   pulseSpeed: 2
   pulseIntensity: 0.4
+  isTake: 0
   massCargo: 0
   onCargoPickedUp:
     m_PersistentCalls:
@@ -366,6 +379,17 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   pts: 0
+  isTake: {fileID: 0}
+  uiCanvas: {fileID: 0}
+  healthSlider: {fileID: 0}
+  showOnDamageDuration: 2
+  showTimer: 0
+  healthBarFill: {fileID: 0}
+  greenColor: {r: 0.2, g: 0.8, b: 0.2, a: 1}
+  yellowColor: {r: 0.9, g: 0.8, b: 0.1, a: 1}
+  redColor: {r: 0.8, g: 0.2, b: 0.2, a: 1}
+  health: 0
+  maxHealth: 0
 --- !u!1 &1623220664818635239
 GameObject:
   m_ObjectHideFlags: 0
@@ -453,7 +477,8 @@ Transform:
   m_LocalPosition: {x: 64.81319, y: -0.16713, z: 45.96689}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1215402269853330695}
   m_Father: {fileID: 8101273211880805075}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &2810443513364520493
@@ -533,8 +558,61 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 22.732632, y: 0.8746464, z: 22.732632}
-  m_Center: {x: 0, y: -0.021575928, z: 0}
+  m_Size: {x: 22.732632, y: 0.4746464, z: 22.732632}
+  m_Center: {x: 0, y: -0.2105759, z: 0}
+--- !u!1 &2766632637570619074
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1215402269853330695}
+  - component: {fileID: 3910764495195906471}
+  m_Layer: 0
+  m_Name: Collider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1215402269853330695
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2766632637570619074}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.09, z: 0}
+  m_LocalScale: {x: 19.872463, y: 0.65846, z: 19.761147}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1202294977303646600}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &3910764495195906471
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2766632637570619074}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &7211752695838415297
 GameObject:
   m_ObjectHideFlags: 0
@@ -588,6 +666,7 @@ MonoBehaviour:
   HelpText: {fileID: 0}
   pulseSpeed: 2
   pulseIntensity: 0.3
+  isTake: 0
   massCargo: 0
   onCargoPickedUp:
     m_PersistentCalls:
@@ -667,6 +746,7 @@ MonoBehaviour:
   HelpText: {fileID: 0}
   pulseSpeed: 2
   pulseIntensity: 0.3
+  isTake: 0
   massCargo: 0
   onCargoPickedUp:
     m_PersistentCalls:
