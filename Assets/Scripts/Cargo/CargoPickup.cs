@@ -22,6 +22,8 @@ public class CargoPickup : MonoBehaviour
     [SerializeField] private float pulseSpeed = 2f;
     [SerializeField] private float pulseIntensity = 0.4f;
 
+
+    public bool isTake = false;
     public float massCargo = 10f; // Установите базовый вес в инспекторе
 
     private TruckCargoSystem truckSystem;
@@ -105,8 +107,6 @@ public class CargoPickup : MonoBehaviour
                 TryPickup();
             }
 
-            PulseEffect();
-
             if (HelpText != null && !HelpText.gameObject.activeSelf)
             {
                 ShowPickupPrompt(true);
@@ -180,8 +180,17 @@ public class CargoPickup : MonoBehaviour
         ResetHighlight();
 
         truckSystem.LoadCargo(transform);
+        StartCoroutine(WaitTimeTake(10f));
         StartCoroutine(MoveToCargoHold());
         IsPickedUp = true;
+
+    }
+
+    private System.Collections.IEnumerator WaitTimeTake(float delay)
+    {
+        isTake = true;
+        yield return new WaitForSeconds(delay);
+        isTake = false;
     }
 
     private System.Collections.IEnumerator HideHelpTextAfterDelay(float delay)
@@ -311,16 +320,6 @@ public class CargoPickup : MonoBehaviour
             HelpText.gameObject.SetActive(true);
             HelpText.text = "Груз выпал из кузова!";
             StartCoroutine(HideHelpTextAfterDelay(3f));
-        }
-    }
-
-    private void PulseEffect()
-    {
-        float intensity = Mathf.PingPong(Time.time * pulseSpeed, pulseIntensity) + 0.6f;
-        foreach (var r in renderers)
-        {
-            if (r.material.HasProperty("_EmissionColor"))
-                r.material.SetColor("_EmissionColor", Color.white * intensity);
         }
     }
 

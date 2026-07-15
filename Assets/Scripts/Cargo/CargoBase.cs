@@ -7,10 +7,11 @@ using UnityEngine.UI;
 
 public class CargoBase : MonoBehaviour
 {
-    //healthbar govna ne rabotaet
     //public UnityEvent onPackagePickedUp;
     public UnityEvent onCargoDelivered;
     public int pts;
+    public CargoPickup isTake;
+    private bool CheckTake = false;
 
     [Header("UI")]
     public GameObject uiCanvas;
@@ -117,8 +118,12 @@ public class CargoBase : MonoBehaviour
     {
         if (IsDelivered) return;
 
+        if (CheckTake) return;
+
+        float damageTreshuld = 5f;
+
         float dmg = collision.relativeVelocity.magnitude;
-        if (dmg > 5)
+        if (dmg > damageTreshuld)
             TakeDamage(dmg);
     }
     void Die()
@@ -141,6 +146,8 @@ public class CargoBase : MonoBehaviour
     {
         HandleUIState();
         FaceCamera();
+
+        CheckTake = isTake.isTake;
     }
 
     private void HandleUIState()
