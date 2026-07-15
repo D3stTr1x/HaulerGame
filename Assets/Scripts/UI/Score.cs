@@ -6,9 +6,9 @@ public class Score : MonoBehaviour
     public TextMeshProUGUI scoreText;
     public static Score Instance;
 
-    private int score;
-    private int highScore;
-    private int cargoDelivered;
+    public int score;
+    public int highScore;
+    public int cargoDelivered;
 
 
     private void Awake()
@@ -26,7 +26,7 @@ public class Score : MonoBehaviour
         //Debug.Log($"cur score: {score}");
         UpdateScoreDisplay();
     }
-    public void UpdateCargosDelivered()
+    public void UpdateCargosDelivered() 
     {
         cargoDelivered++;
         UpdateScoreDisplay();
