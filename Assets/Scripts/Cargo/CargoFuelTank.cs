@@ -6,7 +6,7 @@ public class CargoFuelTank : CargoBase
     void Start()
     {
         health = 100f;
-        Init();
+        base.Start();
     }
 
     // Update is called once per frame

@@ -6,20 +6,20 @@ public class CargoSpawner : MonoBehaviour
 {
     public List<CargoSpawnZone> cargoZones = new List<CargoSpawnZone>();
     public List<CargoSpawnZone> activeZones = new List<CargoSpawnZone>();
-    public GameObject smallPrefab;
-    public GameObject bigPrefab;
-    public GameObject longPrefab;
-    public GameObject canisterPrefab;
-    public GameObject barrelPrefab;
-    public GameObject bottlePrefab;
+    //public GameObject smallPrefab;
+    //public GameObject bigPrefab;
+    //public GameObject longPrefab;
+    //public GameObject canisterPrefab;
+    //public GameObject barrelPrefab;
+    //public GameObject bottlePrefab;
 
-    private GameObject[] prefabs;
+    public GameObject[] prefabs;
     private CargoSpawnZone activeZone;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
-        prefabs = new GameObject[] { smallPrefab, bigPrefab, longPrefab, bottlePrefab, barrelPrefab, canisterPrefab };
+        //prefabs = new GameObject[] { smallPrefab, bigPrefab, longPrefab, bottlePrefab, barrelPrefab, canisterPrefab };
         FindZones();
         ActivateAll();
         //DeactivateAll();

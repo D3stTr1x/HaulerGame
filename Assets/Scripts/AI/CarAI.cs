@@ -76,7 +76,7 @@ public class CarAI : BaseCarController
         //Debug.Log($"got next point: {target}");
 
         Vector3 localTarget = transform.InverseTransformPoint(target);
-        float steer = Mathf.Clamp(localTarget.x, -maxSteer, maxSteer);
+        float steer = Mathf.Clamp(localTarget.x*1.5f, -maxSteer, maxSteer);
         //float desSpeed = CalcSpeed();
         float desSpeed = _maxSpeedForvard;
         //float steer = GetMaxTurnAngle();
