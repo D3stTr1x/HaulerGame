@@ -8,6 +8,7 @@ public class MenuButtonManager : MonoBehaviour
     [SerializeField] private string menuSceneName = "MainMenu";
     [SerializeField] private string gameDemoSceneName = "Demo";
     [SerializeField] private string gameSceneName = "CItyScene 1";
+    [SerializeField] private string gameFinalSceneName = "FinalScene";
     [SerializeField] private GameObject scriptToDisableMusic;
     [SerializeField] private GameObject scriptToDisableSound;
     private AudioSource soundController;
@@ -29,13 +30,11 @@ public class MenuButtonManager : MonoBehaviour
         if (scriptToDisableSound != null)
         {
             soundController = scriptToDisableSound.GetComponent<AudioSource>();
-            Debug.Log("soundScript: " + soundController);
         }
 
         if (scriptToDisableMusic != null)
         {
             musicController = scriptToDisableMusic.GetComponent<AudioSource>();
-            Debug.Log("musicScript: " + musicController);
         }
     }
 
@@ -47,12 +46,18 @@ public class MenuButtonManager : MonoBehaviour
 
     public void ContnueBut()
     {
-        menuImg.gameObject.SetActive(false);
-        menuButton1.gameObject.SetActive(false);
-        menuButton2.gameObject.SetActive(false);
-        menuButton3.gameObject.SetActive(false);
-        menuButton4.gameObject.SetActive(false);
-        menuButton5.gameObject.SetActive(false);
+        if (menuImg != null)
+            menuImg.gameObject.SetActive(false);
+        if (menuButton1 != null)
+            menuButton1.gameObject.SetActive(false);
+        if (menuButton2 != null)
+            menuButton2.gameObject.SetActive(false);
+        if (menuButton3 != null)
+            menuButton3.gameObject.SetActive(false);
+        if (menuButton4 != null)
+            menuButton4.gameObject.SetActive(false);
+        if (menuButton5 != null)
+            menuButton5.gameObject.SetActive(false);
 
         checkMenu = false;
 
@@ -77,16 +82,22 @@ public class MenuButtonManager : MonoBehaviour
             Debug.Log("Car Audio Controller теперь: " + musicController.enabled);
         }
     }
-        
+
 
     public void ToMenu()
     {
-        menuImg.gameObject.SetActive(false);
-        menuButton1.gameObject.SetActive(false);
-        menuButton2.gameObject.SetActive(false);
-        menuButton3.gameObject.SetActive(false);
-        menuButton4.gameObject.SetActive(false);
-        menuButton5.gameObject.SetActive(false);
+        if (menuImg != null)
+            menuImg.gameObject.SetActive(false);
+        if (menuButton1 != null)
+            menuButton1.gameObject.SetActive(false);
+        if (menuButton2 != null)
+            menuButton2.gameObject.SetActive(false);
+        if (menuButton3 != null)
+            menuButton3.gameObject.SetActive(false);
+        if (menuButton4 != null)
+            menuButton4.gameObject.SetActive(false);
+        if (menuButton5 != null)
+            menuButton5.gameObject.SetActive(false);
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
@@ -106,6 +117,14 @@ public class MenuButtonManager : MonoBehaviour
         Cursor.visible = false;
     }
 
+    public void LoadFinalScene()
+    {
+        SceneManager.LoadScene(gameFinalSceneName);
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
+
+
     public void ExitGame()
     {
 #if UNITY_EDITOR
@@ -119,18 +138,35 @@ public class MenuButtonManager : MonoBehaviour
     {
         if ((scene != "MainMenu") && (!checkMenu) && (Input.GetKeyDown(KeyCode.Escape)))
         {
-            menuImg.gameObject.SetActive(true);
-            menuButton1.gameObject.SetActive(true);
-            menuButton2.gameObject.SetActive(true);
-            menuButton3.gameObject.SetActive(true);
-            menuButton4.gameObject.SetActive(true);
-            menuButton5.gameObject.SetActive(true);
-
-            menuButton1.interactable = true;
-            menuButton2.interactable = true;
-            menuButton3.interactable = true;
-            menuButton4.interactable = true;
-            menuButton5.interactable = true;
+            if (menuImg != null)
+            {
+                menuImg.gameObject.SetActive(true);
+            }
+            if (menuButton1 != null)
+            {
+                menuButton1.gameObject.SetActive(true);
+                menuButton1.interactable = true;
+            }
+            if (menuButton2 != null)
+            {
+                menuButton2.interactable = true;
+                menuButton2.gameObject.SetActive(true);
+            }
+            if (menuButton3 != null)
+            {
+                menuButton3.interactable = true;
+                menuButton3.gameObject.SetActive(true);
+            }
+            if (menuButton4 != null)
+            {
+                menuButton4.interactable = true;
+                menuButton4.gameObject.SetActive(true);
+            }
+            if (menuButton5 != null)
+            {
+                menuButton5.interactable = true;
+                menuButton5.gameObject.SetActive(true);
+            }
 
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
