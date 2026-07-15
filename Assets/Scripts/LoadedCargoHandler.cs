@@ -26,6 +26,7 @@ public class LoadedCargoHandler : MonoBehaviour
     }
     public int GetNumCargos()
     {
+        UpdateNumCargos();
         return numCargos;
     }
     private void UpdateNumCargos()
@@ -36,10 +37,13 @@ public class LoadedCargoHandler : MonoBehaviour
         {
             if (t.IsDestroyed())
             {
-                //Debug.Log("Cargo was destroyed");
+                Debug.Log("Cargo was destroyed");
+                curCargos.Remove(t);
             }
             else numCargos++;
         }
+
+        //truckCargoSystem.loadedCargos = curCargos;
     }
     public List<Transform> GetLoadedCargos()
     {

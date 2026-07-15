@@ -86,7 +86,8 @@ public class CargoPickup : MonoBehaviour
         SphereCollider sphereCollider = GetComponentInChildren<SphereCollider>();
         if (sphereCollider)
         {
-            float maxScale = Mathf.Max(transform.lossyScale.x, transform.lossyScale.y, transform.lossyScale.z);
+            //float maxScale = Mathf.Max(transform.lossyScale.x, transform.lossyScale.y, transform.lossyScale.z);
+            float maxScale = Mathf.Max(transform.localScale.x, transform.localScale.y, transform.localScale.z);
             sphereCollider.radius = pickupDistance / maxScale;
         }
     }
@@ -105,7 +106,7 @@ public class CargoPickup : MonoBehaviour
                 TryPickup();
             }
 
-            PulseEffect();
+            //PulseEffect();
 
             if (HelpText != null && !HelpText.gameObject.activeSelf)
             {
@@ -179,6 +180,8 @@ public class CargoPickup : MonoBehaviour
         ShowPickupPrompt(false);
         ResetHighlight();
 
+
+        transform.GetComponent<CargoBase>().FreezeHP();
         truckSystem.LoadCargo(transform);
         StartCoroutine(MoveToCargoHold());
         IsPickedUp = true;
@@ -291,6 +294,7 @@ public class CargoPickup : MonoBehaviour
         isHold = true;
         currentCargoInTruck = transform;
         if (HelpText != null) HelpText.gameObject.SetActive(false);
+
     }
 
     private void OnCargoFallen()

@@ -26,6 +26,7 @@ public class CargoBase : MonoBehaviour
     public Color redColor = new Color(0.8f, 0.2f, 0.2f);
 
     public float health;
+    protected bool isDamageable;
     //protected float maxHealth;
 
     protected int penalty;
@@ -77,6 +78,7 @@ public class CargoBase : MonoBehaviour
 
         // Автоматически берем то здоровье, которое уже есть у груза, как максимальное
         maxHealth = health;
+        FreezeHP();
 
         // Настраиваем ползунок под индивидуальное здоровье груза
         if (healthSlider != null)
@@ -98,20 +100,24 @@ public class CargoBase : MonoBehaviour
     }
     void TakeDamage(float dmg)
     {
-        health -= dmg;
-        //Debug.Log($"dmg taken: {dmg}, cur hp: {health}");
-        UpdateHealthUI();
-        if (healthSlider != null) { healthSlider.value = health; }
-        showTimer = showOnDamageDuration;
-
-        if (health <= 0)
+        if (isDamageable)
         {
-            if (Score.Instance != null)
+            health -= dmg;
+            //Debug.Log($"dmg taken: {dmg}, cur hp: {health}");
+            UpdateHealthUI();
+            if (healthSlider != null) { healthSlider.value = health; }
+            showTimer = showOnDamageDuration;
+
+            if (health <= 0)
             {
-                Score.Instance.UpdateScore(penalty);
+                if (Score.Instance != null)
+                {
+                    Score.Instance.UpdateScore(penalty);
+                }
+                Die();
             }
-            Die();
         }
+        else return;
     }
     private void OnCollisionEnter(Collision collision)
     {
@@ -119,7 +125,11 @@ public class CargoBase : MonoBehaviour
 
         float dmg = collision.relativeVelocity.magnitude;
         if (dmg > 5)
+        {
             TakeDamage(dmg);
+            if (!isDamageable)
+                UnFreezeHP();
+        }    
     }
     void Die()
     {
@@ -198,5 +208,14 @@ public class CargoBase : MonoBehaviour
                 healthBarFill.color = redColor;
             }
         }
+    }
+
+    public void FreezeHP()
+    {
+        isDamageable = false;
+    }
+    public void UnFreezeHP()
+    {
+        isDamageable = true;
     }
 }

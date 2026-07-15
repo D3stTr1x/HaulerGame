@@ -202,7 +202,7 @@ Transform:
   m_GameObject: {fileID: 1476925197459180189}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -295.08838, y: 1.1230451, z: 167.1641}
+  m_LocalPosition: {x: -183.14825, y: 1.1230451, z: 356.97107}
   m_LocalScale: {x: 0.123025134, y: 0.123025134, z: 0.123025134}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -418,7 +418,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7028926408053962849}
-  - component: {fileID: 4335444830116141659}
   - component: {fileID: 7876402258340421607}
   m_Layer: 0
   m_Name: Trigger
@@ -442,31 +441,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 7054388423375169362}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4335444830116141659
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7409086568480758197}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d1663230d9e594748bec992991661688, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CargoPickup
-  pickupDistance: 5
-  pickupKey: e
-  fallDetectionHeight: 1.5
-  fallCheckInterval: 0.5
-  pickupDuration: 1.2
-  HelpText: {fileID: 0}
-  pulseSpeed: 2
-  pulseIntensity: 0.3
-  massCargo: 0
-  onCargoPickedUp:
-    m_PersistentCalls:
-      m_Calls: []
-  isPickedUp: 0
 --- !u!135 &7876402258340421607
 SphereCollider:
   m_ObjectHideFlags: 0
