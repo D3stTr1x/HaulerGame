@@ -26,7 +26,7 @@ public class Score : MonoBehaviour
         //Debug.Log($"cur score: {score}");
         UpdateScoreDisplay();
     }
-    public void UpdateCargosDelivered()
+    public void UpdateCargosDelivered() 
     {
         cargoDelivered++;
         UpdateScoreDisplay();

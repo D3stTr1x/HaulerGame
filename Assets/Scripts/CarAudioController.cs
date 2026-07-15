@@ -32,7 +32,7 @@ public class CarAudioController : MonoBehaviour
     public float revLimiterPitchDrop = 0.35f;
 
     [Header("Brake Settings")]
-    public float sharpBrakeMinSpeed = 20f;
+    public float sharpBrakeMinSpeed = 35f;
     public float sharpBrakeTime = 1.6f;
     public float normalBrakePitch = 0.78f;
 
