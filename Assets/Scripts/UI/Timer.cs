@@ -38,7 +38,7 @@ public class Timer : MonoBehaviour
         //if (cargoSpawner)
         //    onSecPassed += cargoSpawner.SpawnRandomInActive;
 
-        time = 3;
+        time = 180;
         secPassed = 0;
         onSecPassed?.Invoke();
         UpdateTimer();
