@@ -180,7 +180,7 @@ public class CargoPickup : MonoBehaviour
         ResetHighlight();
 
         truckSystem.LoadCargo(transform);
-        StartCoroutine(WaitTimeTake(10f));
+        StartCoroutine(WaitTimeTake(3f));
         StartCoroutine(MoveToCargoHold());
         IsPickedUp = true;
 
