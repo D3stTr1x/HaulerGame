@@ -15,7 +15,7 @@ public class WarningText : MonoBehaviour
     }
     IEnumerator HideAfterDelay()
     {
-        Debug.Log("TaskText HideAfterDelay called");
+        //Debug.Log("TaskText HideAfterDelay called");
         yield return new WaitForSeconds(3);
         taskText.text = "";
     }

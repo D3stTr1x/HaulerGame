@@ -1,8 +1,10 @@
+using System;
 using Unity.VisualScripting;
 using UnityEngine;
 
 public class DeliveryZone : MonoBehaviour
 {
+    public event Action onMarkDelivered;
     //private int pts = 30; //change later
     private LoadedCargoHandler loadedCargoHandler;
     private ZoneSpawner zoneSpawner;
@@ -32,11 +34,7 @@ public class DeliveryZone : MonoBehaviour
             DeactivateZone();
             if (!gameObject.activeInHierarchy)
                 loadedCargoHandler.ClearAllCargo();
-
-            NavigationSystem nav = Object.FindFirstObjectByType<NavigationSystem>();
-            //if (nav != null) nav.SetDeliveryMode(false);
         }
-        
     }
     public void DeactivateZone()
     {
@@ -58,6 +56,7 @@ public class DeliveryZone : MonoBehaviour
             Timer.Instance.AddTime();
         }
         box.MarkDelivered();
+        onMarkDelivered?.Invoke();
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
