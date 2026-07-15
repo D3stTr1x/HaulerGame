@@ -117,18 +117,22 @@ public class CargoBase : MonoBehaviour
                 Die();
             }
         }
-        else return;
+        else
+        {
+            UnFreezeHP();
+            return;
+        }
     }
     private void OnCollisionEnter(Collision collision)
     {
+        if (collision.gameObject.CompareTag("CargoSpawnZone")) return;
         if (IsDelivered) return;
 
         float dmg = collision.relativeVelocity.magnitude;
         if (dmg > 5)
         {
             TakeDamage(dmg);
-            if (!isDamageable)
-                UnFreezeHP();
+            //if (!isDamageable) UnFreezeHP();
         }    
     }
     void Die()
@@ -213,9 +217,11 @@ public class CargoBase : MonoBehaviour
     public void FreezeHP()
     {
         isDamageable = false;
+        //Debug.Log("HP been frozen");
     }
     public void UnFreezeHP()
     {
         isDamageable = true;
+        //Debug.Log("Unfrozen hp been");
     }
 }
