@@ -161,7 +161,10 @@ public class CargoBase : MonoBehaviour
         HandleUIState();
         FaceCamera();
 
-        CheckTake = isTake.isTake;
+        if (isTake != null)
+        {
+            CheckTake = isTake.isTake;
+        }
     }
 
     private void HandleUIState()

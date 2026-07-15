@@ -202,7 +202,7 @@ Transform:
   m_GameObject: {fileID: 1476925197459180189}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -342.31854, y: 1.1230252, z: 384.4243}
+  m_LocalPosition: {x: -347.11215, y: 1.1230252, z: 382.82562}
   m_LocalScale: {x: 0.123025134, y: 0.123025134, z: 0.123025134}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -626,6 +626,7 @@ MonoBehaviour:
   HelpText: {fileID: 0}
   pulseSpeed: 2
   pulseIntensity: 0.4
+  isTake: 0
   massCargo: 10
   onCargoPickedUp:
     m_PersistentCalls:
@@ -647,6 +648,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   pts: 0
+  isTake: {fileID: 0}
   uiCanvas: {fileID: 670390699579904750}
   healthSlider: {fileID: 1733249053167433338}
   showOnDamageDuration: 2
