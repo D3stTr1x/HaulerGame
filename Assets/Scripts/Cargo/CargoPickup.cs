@@ -92,6 +92,12 @@ public class CargoPickup : MonoBehaviour
             float maxScale = Mathf.Max(transform.localScale.x, transform.localScale.y, transform.localScale.z);
             sphereCollider.radius = pickupDistance / maxScale;
         }
+        GameObject canvas = GameObject.FindGameObjectWithTag("ScreenCanvas");
+        if (canvas != null)
+        {
+            GameObject txt = canvas.transform.Find("TakeCargoTxt").gameObject;
+            HelpText = txt.GetComponent<TMP_Text>();
+        }
     }
 
     // ÈÑÏÐÀÂËÅÍÈÅ 1: Òåïåðü ìû ñ÷èòàåì êàæäóþ äåòàëü ãðóçîâèêà â çîíå, ÷òîáû ïðîñàäêà ïîäâåñêè íå ëîìàëà òðèããåð
@@ -324,7 +330,7 @@ public class CargoPickup : MonoBehaviour
         if (HelpText != null)
         {
             HelpText.gameObject.SetActive(true);
-            HelpText.text = "Ãðóç âûïàë èç êóçîâà!";
+            HelpText.text = "Cargo has fallen!";
             StartCoroutine(HideHelpTextAfterDelay(3f));
         }
     }
@@ -344,7 +350,7 @@ public class CargoPickup : MonoBehaviour
 
         if (show)
         {
-            HelpText.text = $"Íàæìèòå [{pickupKey.ToUpper()}] ÷òîáû ïîãðóçèòü";
+            HelpText.text = $"Press [{pickupKey.ToUpper()}] to pick cargo";
             HelpText.gameObject.SetActive(true);
         }
         else
