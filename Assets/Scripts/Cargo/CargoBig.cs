@@ -6,7 +6,8 @@ public class CargoBig : CargoBase
     void Start()
     {
         health = 100f;
-        Init();
+        base.Start();
+        //Init();
     }
 
     // Update is called once per frame

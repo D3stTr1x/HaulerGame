@@ -36,7 +36,7 @@ public class TruckCargoSystem : MonoBehaviour
 
     private void Start()
     {
-        nav = FindFirstObjectByType<NavigationSystem>();
+        //nav = FindFirstObjectByType<NavigationSystem>();
     }
 
     public void LoadCargo(Transform cargo)

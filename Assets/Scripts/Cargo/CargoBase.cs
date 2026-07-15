@@ -27,6 +27,7 @@ public class CargoBase : MonoBehaviour
     public Color redColor = new Color(0.8f, 0.2f, 0.2f);
 
     public float health;
+    protected bool isDamageable;
     //protected float maxHealth;
 
     protected int penalty;
@@ -76,10 +77,11 @@ public class CargoBase : MonoBehaviour
     {
         mainCamera = Camera.main;
 
-        // Автоматически берем то здоровье, которое уже есть у груза, как максимальное
+        // ГЂГўГІГ®Г¬Г ГІГЁГ·ГҐГ±ГЄГЁ ГЎГҐГ°ГҐГ¬ ГІГ® Г§Г¤Г®Г°Г®ГўГјГҐ, ГЄГ®ГІГ®Г°Г®ГҐ ГіГ¦ГҐ ГҐГ±ГІГј Гі ГЈГ°ГіГ§Г , ГЄГ ГЄ Г¬Г ГЄГ±ГЁГ¬Г Г«ГјГ­Г®ГҐ
         maxHealth = health;
+        FreezeHP();
 
-        // Настраиваем ползунок под индивидуальное здоровье груза
+        // ГЌГ Г±ГІГ°Г ГЁГўГ ГҐГ¬ ГЇГ®Г«Г§ГіГ­Г®ГЄ ГЇГ®Г¤ ГЁГ­Г¤ГЁГўГЁГ¤ГіГ Г«ГјГ­Г®ГҐ Г§Г¤Г®Г°Г®ГўГјГҐ ГЈГ°ГіГ§Г 
         if (healthSlider != null)
         {
             healthSlider.maxValue = maxHealth;
@@ -99,23 +101,32 @@ public class CargoBase : MonoBehaviour
     }
     void TakeDamage(float dmg)
     {
-        health -= dmg;
-        //Debug.Log($"dmg taken: {dmg}, cur hp: {health}");
-        UpdateHealthUI();
-        if (healthSlider != null) { healthSlider.value = health; }
-        showTimer = showOnDamageDuration;
-
-        if (health <= 0)
+        if (isDamageable)
         {
-            if (Score.Instance != null)
+            health -= dmg;
+            //Debug.Log($"dmg taken: {dmg}, cur hp: {health}");
+            UpdateHealthUI();
+            if (healthSlider != null) { healthSlider.value = health; }
+            showTimer = showOnDamageDuration;
+
+            if (health <= 0)
             {
-                Score.Instance.UpdateScore(penalty);
+                if (Score.Instance != null)
+                {
+                    Score.Instance.UpdateScore(penalty);
+                }
+                Die();
             }
-            Die();
+        }
+        else
+        {
+            UnFreezeHP();
+            return;
         }
     }
     private void OnCollisionEnter(Collision collision)
     {
+        if (collision.gameObject.CompareTag("CargoSpawnZone")) return;
         if (IsDelivered) return;
 
         if (CheckTake) return;
@@ -123,8 +134,11 @@ public class CargoBase : MonoBehaviour
         float damageTreshuld = 5f;
 
         float dmg = collision.relativeVelocity.magnitude;
-        if (dmg > damageTreshuld)
+        if (dmg > 5)
+        {
             TakeDamage(dmg);
+            //if (!isDamageable) UnFreezeHP();
+        }    
     }
     void Die()
     {
@@ -172,10 +186,10 @@ public class CargoBase : MonoBehaviour
     {
         if (uiCanvas != null && uiCanvas.activeSelf && mainCamera != null)
         {
-            // 1. Всегда держим Canvas ровно над объектом (по глобальной оси Y)
+            // 1. Г‚Г±ГҐГЈГ¤Г  Г¤ГҐГ°Г¦ГЁГ¬ Canvas Г°Г®ГўГ­Г® Г­Г Г¤ Г®ГЎГєГҐГЄГІГ®Г¬ (ГЇГ® ГЈГ«Г®ГЎГ Г«ГјГ­Г®Г© Г®Г±ГЁ Y)
             uiCanvas.transform.position = transform.position + Vector3.up * uiHeightOffset;
 
-            // 2. Поворачиваем к камере
+            // 2. ГЏГ®ГўГ®Г°Г Г·ГЁГўГ ГҐГ¬ ГЄ ГЄГ Г¬ГҐГ°ГҐ
             uiCanvas.transform.rotation = Quaternion.LookRotation(uiCanvas.transform.position - mainCamera.transform.position);
         }
     }
@@ -184,10 +198,10 @@ public class CargoBase : MonoBehaviour
     {
         if (healthSlider == null) return;
 
-        // Записываем текущее здоровье в слайдер
+        // Г‡Г ГЇГЁГ±Г»ГўГ ГҐГ¬ ГІГҐГЄГіГ№ГҐГҐ Г§Г¤Г®Г°Г®ГўГјГҐ Гў Г±Г«Г Г©Г¤ГҐГ°
         healthSlider.value = health;
 
-        // Если привязан компонент Fill Image, меняем его цвет
+        // Г…Г±Г«ГЁ ГЇГ°ГЁГўГїГ§Г Г­ ГЄГ®Г¬ГЇГ®Г­ГҐГ­ГІ Fill Image, Г¬ГҐГ­ГїГҐГ¬ ГҐГЈГ® Г¶ГўГҐГІ
         if (healthBarFill != null && maxHealth > 0f)
         {
             float healthPercent = health / maxHealth;
@@ -205,5 +219,16 @@ public class CargoBase : MonoBehaviour
                 healthBarFill.color = redColor;
             }
         }
+    }
+
+    public void FreezeHP()
+    {
+        isDamageable = false;
+        //Debug.Log("HP been frozen");
+    }
+    public void UnFreezeHP()
+    {
+        isDamageable = true;
+        //Debug.Log("Unfrozen hp been");
     }
 }
