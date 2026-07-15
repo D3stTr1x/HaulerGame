@@ -4429,9 +4429,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.y
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 1512852988974384586, guid: 7cde4ebe427fb84439e544e7cd60052e, type: 3}
+      propertyPath: m_Area
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 1623220664818635239, guid: 7cde4ebe427fb84439e544e7cd60052e, type: 3}
       propertyPath: m_Name
       value: WarehouseNew (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1623220664818635239, guid: 7cde4ebe427fb84439e544e7cd60052e, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2009933944364714802, guid: 7cde4ebe427fb84439e544e7cd60052e, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 4942667639981993748, guid: 7cde4ebe427fb84439e544e7cd60052e, type: 3}
       propertyPath: m_LocalPosition.x
@@ -5690,7 +5702,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshModifier
   m_SerializedVersion: 0
   m_OverrideArea: 1
-  m_Area: 4
+  m_Area: 1
   m_OverrideGenerateLinks: 0
   m_GenerateLinks: 0
   m_IgnoreFromBuild: 0
