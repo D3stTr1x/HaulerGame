@@ -6,9 +6,9 @@ public class Score : MonoBehaviour
     public TextMeshProUGUI scoreText;
     public static Score Instance;
 
-    private int score;
-    private int highScore;
-    private int cargoDelivered;
+    public int score;
+    public int highScore;
+    public int cargoDelivered;
 
 
     private void Awake()

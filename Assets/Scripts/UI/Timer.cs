@@ -8,6 +8,21 @@ public class Timer : MonoBehaviour
     public TextMeshProUGUI timeText;
     public static Timer Instance;
     public CargoSpawner cargoSpawner;
+    private Score score;
+    public static int finScore;
+    public static int highScoreFin;
+    public static int cargoDeliveredFin;
+
+
+    [SerializeField] private GameObject canvas;
+    [SerializeField] private GameObject scriptToDisableMusic;
+    [SerializeField] private GameObject scriptToDisableSound;
+    [SerializeField] private GameObject scriptToDisableMBM;
+    [SerializeField] private GameObject scriptScore;
+    private AudioSource soundController;
+    private AudioSource musicController;
+    private MenuButtonManager mbm;
+
     private int time;
     private int secPassed;
     private void Awake()
@@ -27,6 +42,40 @@ public class Timer : MonoBehaviour
         secPassed = 0;
         onSecPassed?.Invoke();
         UpdateTimer();
+
+        if (scriptScore != null)
+        {
+            score = scriptScore.GetComponent<Score>();
+        }
+
+        if (scriptToDisableSound != null)
+        {
+            soundController = scriptToDisableSound.GetComponent<AudioSource>();
+        }
+
+        if (scriptToDisableMusic != null)
+        {
+            musicController = scriptToDisableMusic.GetComponent<AudioSource>();
+        }
+        if (scriptToDisableMBM != null)
+        {
+            mbm = scriptToDisableMBM.GetComponent<MenuButtonManager>();
+        }
+    }
+    public void StopSound()
+    {
+        if (soundController != null)
+        {
+            soundController.enabled = false;
+        }
+    }
+
+    public void StopMusic()
+    {
+        if (musicController != null)
+        {
+            musicController.enabled = false;
+        }
     }
     //public void Passed()
     //{
@@ -55,6 +104,12 @@ public class Timer : MonoBehaviour
         else
         {
             WarningText taskText = GameObject.FindFirstObjectByType<WarningText>();
+            //OpenFinalCanvas();
+            finScore = score.score;
+            highScoreFin = score.highScore;
+            cargoDeliveredFin = score.cargoDelivered;
+            Debug.Log("Time over");
+            mbm.LoadFinalScene();
             taskText.TimesUpMessage();
         }
         if (time > 0 && secPassed >= 0 && secPassed % 30 == 0)
@@ -63,6 +118,17 @@ public class Timer : MonoBehaviour
             //Debug.Log("Sec passed, cargo spawn event fired");
         }
     }
+
+    //private void OpenFinalCanvas()
+    //{
+    //    StopSound();
+    //    StopMusic();
+    //    canvas.gameObject.SetActive(true);
+    //    mbm.gameObject.SetActive(false);
+
+    //    Cursor.lockState = CursorLockMode.Locked;
+    //    Cursor.visible = false;
+    //}
 
     // Update is called once per frame
     void Update()
