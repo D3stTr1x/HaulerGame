@@ -15,7 +15,6 @@ GameObject:
   - component: {fileID: 7960531178429197726}
   - component: {fileID: 1047816472626327492}
   - component: {fileID: 7280743006330943826}
-  - component: {fileID: 3147855966849956652}
   m_Layer: 0
   m_Name: Fuel_tank
   m_TagString: Untagged
@@ -32,7 +31,7 @@ Transform:
   m_GameObject: {fileID: 236073868991196252}
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071069, y: -0, z: -0, w: 0.7071067}
-  m_LocalPosition: {x: 2.53, y: 0, z: 5.68}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 100, y: 100, z: 100}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -116,6 +115,7 @@ MonoBehaviour:
   HelpText: {fileID: 0}
   pulseSpeed: 2
   pulseIntensity: 0.4
+  isTake: 0
   massCargo: 10
   onCargoPickedUp:
     m_PersistentCalls:
@@ -159,6 +159,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   pts: 0
+  isTake: {fileID: 0}
   uiCanvas: {fileID: 9038362346576742508}
   healthSlider: {fileID: 707618273383717935}
   showOnDamageDuration: 2
@@ -196,28 +197,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!64 &3147855966849956652
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 236073868991196252}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -5817326674769992385, guid: 18fe21f48b31a51458a2d7ab0cf920a1, type: 3}
 --- !u!1 &1547828354963412965
 GameObject:
   m_ObjectHideFlags: 0
@@ -243,7 +222,7 @@ Transform:
   m_GameObject: {fileID: 1547828354963412965}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -342.29742, y: 2, z: 384.6456}
+  m_LocalPosition: {x: -190.18896, y: 2.00002, z: 350.9272}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -303,6 +282,7 @@ MonoBehaviour:
   HelpText: {fileID: 0}
   pulseSpeed: 2
   pulseIntensity: 0.3
+  isTake: 0
   massCargo: 0
   onCargoPickedUp:
     m_PersistentCalls:

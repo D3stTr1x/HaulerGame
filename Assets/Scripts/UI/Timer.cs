@@ -38,8 +38,9 @@ public class Timer : MonoBehaviour
         //if (cargoSpawner)
         //    onSecPassed += cargoSpawner.SpawnRandomInActive;
 
-        time = 3;
+        time = 180;
         secPassed = 0;
+        onSecPassed?.Invoke();
         UpdateTimer();
 
         if (scriptScore != null)
@@ -90,7 +91,7 @@ public class Timer : MonoBehaviour
     }
     public void AddTime()
     {
-        time += 30; //maybe not needed
+        time += 10; //maybe not needed
     }
     void UpdateTimeDisplay()
     {
@@ -111,7 +112,7 @@ public class Timer : MonoBehaviour
             mbm.LoadFinalScene();
             taskText.TimesUpMessage();
         }
-        if (time > 0 && secPassed >= 0 && secPassed % 3 == 0)
+        if (time > 0 && secPassed >= 0 && secPassed % 30 == 0)
         {
             onSecPassed?.Invoke();
             //Debug.Log("Sec passed, cargo spawn event fired");

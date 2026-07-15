@@ -11,24 +11,11 @@ public class ZoneSpawner : MonoBehaviour
     private DeliveryZone activeZone;
 
     public TruckCargoSystem truckCargoSystem;
-//<<<<<<< HEAD
-//    private NavigationSystem navigationSystem;
-//    private CargoSpawner cargoSpawner;
-//=======
-    //private NavigationSystem navigationSystem;
     private NavArrow nav;
-//>>>>>>> de943bc (new NavArrow)
 
 
     void Start()
     {
-//<<<<<<< HEAD
-//        // Ќаходим навигатор на сцене, иначе он был равен null 
-//        navigationSystem = Object.FindFirstObjectByType<NavigationSystem>();
-//        cargoSpawner = FindFirstObjectByType<CargoSpawner>();
-//=======
-        // Ќаходим навигатор на сцене, иначе он был равен null
-        //navigationSystem = Object.FindFirstObjectByType<NavigationSystem>();
         nav = FindFirstObjectByType<NavArrow>();
 
         FindZones();
@@ -44,32 +31,11 @@ public class ZoneSpawner : MonoBehaviour
             zone.SetActive(false);
         }
         activeZoneExists = false;
-//<<<<<<< HEAD
-//        activeZone = null;
-//        // «аставл€ем навигатор пересчитать цель сразу после отключени€ зоны
-//        if (navigationSystem != null)
-//        {
-//            //navigationSystem.FindNearestTarget();
-//            //navigationSystem.SetActivePoint();
-//        }
-
-//        //prob shouldnt be there
-//        if (cargoSpawner != null)
-//        {
-//            // а надо ли это вообще, может оставить их пусть всегда будут активны.
-//            cargoSpawner.DeactivateAll();
-//            cargoSpawner.ActivateRandom();
-//=======
 
         if (nav != null)
         {
             if (nav.GetTarget() == zone.transform) { nav.SetDeliveryMode(false); }
         }
-        // «аставл€ем навигатор пересчитать цель сразу после отключени€ зоны
-        //if (navigationSystem != null)
-        //{
-        //    //navigationSystem.FindNearestTarget();
-        //}
     }
     void FindZones()
     {
@@ -86,7 +52,6 @@ public class ZoneSpawner : MonoBehaviour
         {
             zone.gameObject.SetActive(false);
         }
-        //navigationSystem.FindNearestTarget();
         activeZoneExists = false;
         activeZone = null;
     }
@@ -96,13 +61,7 @@ public class ZoneSpawner : MonoBehaviour
         {
             int idx = Random.Range(0, deliveryZones.Count);
             deliveryZones[idx].gameObject.SetActive(true);
-            //navigationSystem.FindNearestTarget();
-//<<<<<<< HEAD
-//            activeZoneExists = true;
-//            activeZone = deliveryZones[idx];
-//=======
-            //navigationSystem.SetDeliveryPointTarget();
-            //navigationSystem.SetAsTarget(deliveryZones[idx].gameObject);
+
             activeZoneExists = true;
 
             if (nav != null) { nav.SetDeliveryMode(true); nav.SetAsTarget(deliveryZones[idx].gameObject); }

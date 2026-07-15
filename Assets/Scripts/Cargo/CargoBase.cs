@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using TMPro;
 using UnityEngine;
@@ -9,6 +10,7 @@ public class CargoBase : MonoBehaviour
 {
     //public UnityEvent onPackagePickedUp;
     public UnityEvent onCargoDelivered;
+    public event Action<GameObject> onDelivered;
     public int pts;
     public CargoPickup isTake;
     private bool CheckTake = false;
@@ -46,6 +48,7 @@ public class CargoBase : MonoBehaviour
                 if (isDelivered)
                 {
                     onCargoDelivered?.Invoke();
+                    onDelivered?.Invoke(gameObject);
                     //Debug.Log($"Cargo delivered, events fired");
                 }
             }
@@ -53,7 +56,7 @@ public class CargoBase : MonoBehaviour
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    private void Awake()
+    protected virtual void Awake()
     {
         //adding event listeners
         WarningText taskText = GameObject.FindFirstObjectByType<WarningText>();
@@ -70,6 +73,12 @@ public class CargoBase : MonoBehaviour
         if (score != null)
         {
             onCargoDelivered.AddListener(score.UpdateCargosDelivered);
+        }
+        TasksText tt = FindFirstObjectByType<TasksText>();
+        Debug.Log($"tt null? {tt == null}");
+        if (tt != null)
+        {
+            onDelivered += tt.OnAnyCargoDelivered;
         }
     }
 
@@ -161,7 +170,10 @@ public class CargoBase : MonoBehaviour
         HandleUIState();
         FaceCamera();
 
-        CheckTake = isTake.isTake;
+        if (isTake != null)
+        {
+            CheckTake = isTake.isTake;
+        }
     }
 
     private void HandleUIState()
