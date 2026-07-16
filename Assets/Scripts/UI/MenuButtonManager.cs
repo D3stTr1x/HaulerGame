@@ -13,6 +13,7 @@ public class MenuButtonManager : MonoBehaviour
     [SerializeField] private GameObject scriptToDisableSound;
     private AudioSource soundController;
     private AudioSource musicController;
+    private CarAudioController musicScript;
 
     [SerializeField] private Image menuImg;
     [SerializeField] private Button menuButton1;
@@ -30,6 +31,7 @@ public class MenuButtonManager : MonoBehaviour
         if (scriptToDisableSound != null)
         {
             soundController = scriptToDisableSound.GetComponent<AudioSource>();
+            musicScript = scriptToDisableSound.GetComponent<CarAudioController>();
         }
 
         if (scriptToDisableMusic != null)
@@ -69,7 +71,10 @@ public class MenuButtonManager : MonoBehaviour
     {
         if (soundController != null)
         {
+            if (soundController.isPlaying)
+                soundController.Stop();
             soundController.enabled = !soundController.enabled;
+            musicScript.enabled = !musicScript.enabled;
             Debug.Log("Car Audio Controller теперь: " + soundController.enabled);
         }
     }
@@ -78,6 +83,8 @@ public class MenuButtonManager : MonoBehaviour
     {
         if (musicController != null)
         {
+            if (musicController.isPlaying)
+                musicController.Stop();
             musicController.enabled = !musicController.enabled;
             Debug.Log("Car Audio Controller теперь: " + musicController.enabled);
         }
