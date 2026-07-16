@@ -104,9 +104,13 @@ public class CargoBase : MonoBehaviour
 
     protected void Init()
     {
-        penalty = -((int)health / 4);
+        penalty = -((int)health / 2);
         //health = maxHealth;
-        pts = (int)health / 2;
+        pts = (int)(health);
+    }
+    protected void RecalculatePts()
+    {
+        pts = (int)(health);
     }
     void TakeDamage(float dmg)
     {
@@ -140,10 +144,10 @@ public class CargoBase : MonoBehaviour
 
         if (CheckTake) return;
 
-        float damageTreshuld = 5f;
+        float damageThreshhold = 5f;
 
         float dmg = collision.relativeVelocity.magnitude;
-        if (dmg > 5)
+        if (dmg > damageThreshhold)
         {
             TakeDamage(dmg);
             //if (!isDamageable) UnFreezeHP();
@@ -157,6 +161,7 @@ public class CargoBase : MonoBehaviour
     public void MarkDelivered()
     {
         IsDelivered = true;
+        RecalculatePts();
         Die();
         //Debug.Log("cargo delivered");
     }

@@ -47,6 +47,7 @@ public class DeliveryZone : MonoBehaviour
     }
     void MarkDelivered(CargoBase box) 
     {
+        box.MarkDelivered();
         if (Score.Instance != null)
         {
             Score.Instance.UpdateScore(box.pts);
@@ -55,7 +56,7 @@ public class DeliveryZone : MonoBehaviour
         {
             Timer.Instance.AddTime();
         }
-        box.MarkDelivered();
+        
         onMarkDelivered?.Invoke();
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
